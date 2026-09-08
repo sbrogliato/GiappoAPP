@@ -1,100 +1,1589 @@
-<div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
-  <button class="calc-close" id="flightsCloseBtn">✕</button>
-  <h3 class="calc-title">✈️ Voli & Operativi</h3>
-  <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air Dolomiti</b></p>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Momiji Kikō — Giappone 2026</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#22252b;
+    --paper:#f6f1e6;
+    --paper-2:#efe7d6;
+    --dusk:#232b3d;
+    --dusk-2:#2f3a52;
+    --vermillion:#b5432f;
+    --vermillion-dark:#8f2f20;
+    --ginkgo:#c99a2e;
+    --pine:#3c5a4a;
+    --line:#ddd2b8;
+    --shadow: 0 10px 30px rgba(35,43,61,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+    background:var(--dusk);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:contain;
+  }
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--paper);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
 
-  <!-- ANDATA -->
-  <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
-  
-  <div class="flight-card">
-    <div class="flight-header-row">
-      <b>Tratta 1: Milano → Monaco</b>
-      <span class="flight-badge">EN / LH</span>
-    </div>
-    <div class="flight-route">
-      <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
-      <div class="flight-arrow">➔</div>
-      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
-    </div>
-    <div class="flight-times">
-      <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
-      <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
+  /* ---------- HEADER ---------- */
+  .app-header{
+    background:linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 100%);
+    color:var(--paper);
+    padding:22px 20px 16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .app-header::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:160px;height:160px;
+    background:radial-gradient(circle, rgba(197,154,46,0.35) 0%, rgba(197,154,46,0) 70%);
+  }
+  .app-eyebrow{
+    font-size:12.5px;
+    letter-spacing:.04em;
+    color:var(--ginkgo);
+    margin:0 0 2px;
+  }
+  .app-title{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 4px;
+    letter-spacing:.01em;
+  }
+  .app-sub{
+    font-size:13px;
+    color:#cdd3e0;
+    margin:0 0 12px;
+  }
+  .header-tools{
+    display:flex;
+    gap:8px;
+    position:relative;
+    z-index:2;
+    flex-wrap:wrap;
+  }
+  .tool-btn{
+    background:rgba(246,241,230,0.15);
+    border:1px solid rgba(246,241,230,0.3);
+    color:var(--paper);
+    padding:6px 12px;
+    border-radius:18px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+  .tool-btn:active{ background:rgba(246,241,230,0.3); }
+
+  /* ---------- CONNEXION ALERT BANNER ---------- */
+  .conn-alert{
+    margin:10px 16px 0;
+    padding:10px 12px;
+    background:#fff8e6;
+    border:1px solid #ebd494;
+    border-radius:12px;
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:12px;
+    color:#66511a;
+    line-height:1.45;
+  }
+  .conn-alert b{ color:#8f2f20; }
+  .conn-icon{ font-size:16px; flex-shrink:0; }
+
+  /* ---------- DAY STRIP ---------- */
+  .day-strip{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:14px 16px 16px;
+    background:var(--dusk-2);
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .day-strip::-webkit-scrollbar{display:none;}
+  .day-chip{
+    flex:0 0 auto;
+    min-width:54px;
+    text-align:center;
+    padding:8px 6px 7px;
+    border-radius:14px;
+    background:rgba(246,241,230,0.08);
+    border:1px solid rgba(246,241,230,0.14);
+    cursor:pointer;
+    color:#cfd5e2;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .day-chip .dow{
+    display:block;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    opacity:.75;
+  }
+  .day-chip .num{
+    display:block;
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:19px;
+    font-weight:700;
+    margin-top:1px;
+  }
+  .day-chip.active{
+    background:var(--vermillion);
+    border-color:var(--vermillion);
+    color:#fff;
+    transform:translateY(-2px);
+  }
+
+  /* ---------- DAY HEADER CARD ---------- */
+  .day-card{
+    margin:14px 16px 6px;
+    padding:14px 16px;
+    background:var(--paper-2);
+    border-radius:16px;
+    border:1px solid var(--line);
+  }
+  .day-card .city{
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--vermillion-dark);
+    font-weight:700;
+    margin:0 0 3px;
+  }
+  .day-card h2{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:19px;
+    margin:0 0 4px;
+    line-height:1.3;
+  }
+  .day-card .note{
+    font-size:12.5px;
+    color:#5c5646;
+    margin:6px 0 0;
+    line-height:1.5;
+  }
+  .day-card .note b{color:var(--vermillion-dark);}
+
+  /* ---------- MAP ---------- */
+  .map-wrap{
+    margin:14px 16px;
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  #map{ height:220px; width:100%; background:#e7e1d0; }
+  .map-legend{
+    position:absolute;
+    left:10px; bottom:10px;
+    background:rgba(246,241,230,0.92);
+    padding:5px 10px;
+    border-radius:10px;
+    font-size:11px;
+    color:var(--ink);
+    display:flex; align-items:center; gap:6px;
+    z-index: 1000;
+  }
+  .leaflet-marker-pin{
+    width:26px;height:26px;
+    border-radius:50% 50% 50% 0;
+    background:var(--vermillion);
+    transform:rotate(-45deg);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,.3);
+    border:2px solid #fff;
+  }
+  .leaflet-marker-pin span{
+    transform:rotate(45deg);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{
+    padding:6px 16px 28px;
+    position:relative;
+  }
+  .stop{
+    display:flex;
+    gap:12px;
+    position:relative;
+    padding-bottom:18px;
+  }
+  .stop:last-child{padding-bottom:0;}
+  .stop-rail{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:34px;
+    flex:0 0 34px;
+  }
+  .stop-dot{
+    width:34px;height:34px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--vermillion);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;
+    flex:0 0 auto;
+    z-index:1;
+  }
+  .stop-line{
+    flex:1;
+    width:2px;
+    background:var(--line);
+    margin-top:2px;
+  }
+  .stop-body{
+    flex:1;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:11px 13px;
+    cursor:pointer;
+    transition:box-shadow .15s ease, border-color .15s ease;
+  }
+  .stop-body.open{
+    border-color:var(--vermillion);
+    box-shadow:var(--shadow);
+  }
+  .stop-time{
+    font-size:11px;
+    color:var(--vermillion-dark);
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .stop-title{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:16px;
+    margin:2px 0 0;
+    line-height:1.3;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .stop-title .chevron{
+    font-size:13px;
+    color:#a89f86;
+    transition:transform .2s ease;
+    flex:0 0 auto;
+    margin-top:3px;
+  }
+  .stop-body.open .chevron{ transform:rotate(180deg); }
+  .stop-detail{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .stop-body.open .stop-detail{
+    max-height:450px;
+  }
+  .stop-detail-inner{
+    padding-top:9px;
+    font-size:13px;
+    line-height:1.55;
+    color:#3f3b31;
+  }
+  .stop-note{
+    margin-top:8px;
+    padding:8px 10px;
+    background:#faf3e2;
+    border-left:3px solid var(--ginkgo);
+    border-radius:6px;
+    font-size:12px;
+    color:#6b5a24;
+  }
+  .stop-actions{
+    margin-top:10px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .btn-map, .btn-detail, .btn-official, .btn-kanji{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+    padding:7px 12px;
+    border-radius:20px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-map{ background:var(--pine); }
+  .btn-detail{ background:var(--vermillion); }
+  .btn-official{ background:var(--ginkgo); color:#3a2e05; }
+  .btn-kanji{ background:var(--dusk-2); color:#fff; }
+
+  /* ---------- FOOTER NAV ---------- */
+  .bottom-nav{
+    position:sticky;
+    bottom:0;
+    background:rgba(246,241,230,0.96);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    padding:10px 18px calc(10px + env(safe-area-inset-bottom));
+    font-size:12px;
+    color:#7a725c;
+    z-index:5;
+  }
+  .bottom-nav button{
+    background:none;border:none;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:700;
+    color:var(--vermillion-dark);
+    padding:6px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .bottom-nav button:disabled{ opacity:.3; }
+  .bottom-nav .center{
+    text-align:center;
+    flex:1;
+    align-self:center;
+    color:#7a725c;
+  }
+
+  /* ---------- DETAIL PAGE (overlay) ---------- */
+  .detail-page{
+    position:fixed;
+    inset:0;
+    max-width:480px;
+    margin:0 auto;
+    background:var(--paper);
+    transform:translateX(100%);
+    transition:transform .28s ease;
+    z-index:99999;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    isolation:isolate;
+    visibility:hidden;
+  }
+  .detail-page.open{ visibility:visible; transform:translateX(0); }
+  .detail-hero{
+    background:linear-gradient(160deg, var(--dusk) 0%, var(--dusk-2) 100%);
+    color:var(--paper);
+    padding:20px 20px 26px;
+    position:sticky;
+    top:0;
+  }
+  .detail-close{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:rgba(246,241,230,0.12);
+    border:1px solid rgba(246,241,230,0.25);
+    color:var(--paper);
+    padding:6px 13px;
+    border-radius:20px;
+    font-family:inherit;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    margin-bottom:14px;
+  }
+  .detail-icon{ font-size:38px; line-height:1; margin-bottom:8px; }
+  .detail-eyebrow{
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--ginkgo);
+    margin:0 0 4px;
+    font-weight:700;
+  }
+  .detail-title{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:23px;
+    margin:0;
+    line-height:1.3;
+  }
+  .detail-time{
+    font-size:12.5px;
+    color:#cdd3e0;
+    margin:6px 0 0;
+  }
+  .detail-body{ padding:20px; }
+  .detail-body h3{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:15px;
+    color:var(--vermillion-dark);
+    margin:22px 0 8px;
+  }
+  .detail-body h3:first-child{ margin-top:0; }
+  .detail-body p{
+    font-size:14px;
+    line-height:1.7;
+    color:#3f3b31;
+    margin:0 0 4px;
+  }
+  .info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:6px;
+  }
+  .info-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .info-card .k{
+    font-size:10.5px;
+    letter-spacing:.03em;
+    color:var(--pine);
+    font-weight:700;
+    margin:0 0 3px;
+  }
+  .info-card .v{
+    font-size:13px;
+    color:var(--ink);
+    margin:0;
+    line-height:1.4;
+  }
+  .detail-tip{
+    margin-top:16px;
+    padding:12px 14px;
+    background:#faf3e2;
+    border-left:3px solid var(--ginkgo);
+    border-radius:8px;
+    font-size:13px;
+    color:#6b5a24;
+    line-height:1.6;
+  }
+  .detail-footer-note{
+    margin:26px 0 6px;
+    font-size:11px;
+    color:#9a9078;
+    line-height:1.6;
+    text-align:center;
+  }
+  .detail-actions{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .detail-actions a, .detail-actions button{
+    text-align:center;
+    color:#fff;
+    text-decoration:none;
+    padding:12px;
+    border-radius:14px;
+    font-weight:700;
+    font-size:13.5px;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .detail-actions .btn-map-act{ background:var(--pine); }
+  .detail-actions .btn-kanji-act{ background:var(--dusk-2); }
+
+  /* ---------- KANJI FULLSCREEN MODAL ---------- */
+  .kanji-modal{
+    position:fixed;
+    inset:0;
+    background:#111;
+    color:#fff;
+    z-index:200000;
+    display:none;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    padding:30px 20px calc(30px + env(safe-area-inset-bottom));
+    text-align:center;
+  }
+  .kanji-modal.open{ display:flex; }
+  .kanji-header-note{
+    font-size:14px;
+    color:#aaa;
+    margin-top:20px;
+  }
+  .kanji-display-text{
+    font-family:'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size:52px;
+    font-weight:700;
+    color:#ffe17d;
+    line-height:1.2;
+    word-break:break-all;
+    margin:auto 0;
+  }
+  .kanji-romaji-text{
+    font-size:20px;
+    color:#fff;
+    margin-bottom:20px;
+    font-weight:500;
+  }
+  .kanji-close-btn{
+    background:#b5432f;
+    color:#fff;
+    border:none;
+    padding:14px 32px;
+    border-radius:30px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    width:100%;
+    max-width:300px;
+  }
+
+  /* ---------- CALCULATOR MODAL ---------- */
+  .calc-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(4px);
+    z-index:200000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .calc-modal.open{ display:flex; }
+  .calc-card{
+    background:var(--paper);
+    border-radius:20px;
+    padding:22px 20px;
+    width:100%;
+    max-width:360px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    position:relative;
+  }
+  .calc-title{
+    font-family:'Shippori Mincho', serif;
+    font-size:20px;
+    margin:0 0 6px;
+    color:var(--dusk);
+  }
+  .calc-close{
+    position:absolute; right:16px; top:16px;
+    background:none; border:none; font-size:20px; color:#7a725c; cursor:pointer;
+  }
+  .calc-rate-row{
+    font-size:12px;
+    color:#665c47;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .calc-rate-row input{
+    width:65px;
+    padding:4px 6px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    text-align:center;
+    font-weight:700;
+  }
+  .calc-inputs{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .calc-field{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .calc-field label{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--pine);
+    text-transform:uppercase;
+  }
+  .calc-field input{
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:18px;
+    font-weight:700;
+    color:var(--ink);
+    background:#fff;
+  }
+  .quick-jpy{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:14px;
+  }
+  .quick-jpy button{
+    flex:1;
+    min-width:60px;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  /* ---------- FLIGHTS MODAL & CARDS ---------- */
+  .flight-section-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--vermillion-dark);
+    margin:14px 0 8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:4px;
+  }
+  .flight-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+    font-size:12.5px;
+  }
+  .flight-header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .flight-badge{
+    background:var(--dusk-2);
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:10px;
+  }
+  .flight-route{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:8px 0;
+  }
+  .flight-loc{
+    text-align:center;
+  }
+  .flight-loc .code{
+    font-size:18px;
+    font-weight:700;
+    color:var(--dusk);
+    line-height:1;
+  }
+  .flight-loc .sub{
+    font-size:10.5px;
+    color:#7a725c;
+    margin-top:2px;
+  }
+  .flight-arrow{
+    font-size:14px;
+    color:var(--ginkgo);
+    font-weight:700;
+  }
+  .flight-times{
+    background:var(--paper-2);
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:11.5px;
+    color:#3f3b31;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-top:6px;
+  }
+  .layover-box{
+    background:#faf3e2;
+    border:1px dashed var(--ginkgo);
+    border-radius:8px;
+    padding:8px 10px;
+    margin:8px 0;
+    font-size:11.5px;
+    color:#6b5a24;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-header">
+    <p class="app-eyebrow">紅葉紀行 · Momiji Kikō</p>
+    <h1 class="app-title">Giappone in autunno</h1>
+    <p class="app-sub">11 – 24 novembre 2026 · Tokyo · Kyoto · Takao · Nara · Osaka</p>
+    <div class="header-tools">
+      <button class="tool-btn" id="openFlightsBtn">✈️ Dettaglio Voli</button>
+      <button class="tool-btn" id="openCalcBtn">🧮 Calcolatore Cambio ¥ / €</button>
     </div>
   </div>
 
-  <div class="layover-box">
-    ⏱️ <b>Scalo a Monaco (MUC):</b> 3 ore e 05 minuti
+  <div class="conn-alert">
+    <span class="conn-icon">📶</span>
+    <div><b>Nota Connessione:</b> La connessione Wi-Fi o la eSIM possono avere cali di segnale nei treni, nelle stazioni sotterranee o nelle zone montane.</div>
   </div>
 
-  <div class="flight-card">
-    <div class="flight-header-row">
-      <b>Tratta 2: Monaco → Tokyo Haneda</b>
-      <span class="flight-badge">Lufthansa LH714</span>
-    </div>
-    <div class="flight-route">
-      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
-      <div class="flight-arrow">➔</div>
-      <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
-    </div>
-    <div class="flight-times">
-      <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
-      <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
-      <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
-    </div>
-    <div style="margin-top:8px;">
-      <a href="https://www.flightaware.com/live/flight/LH714" target="_blank" rel="noopener" class="btn-map" style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714 Live</a>
-    </div>
+  <div class="day-strip" id="dayStrip"></div>
+
+  <div class="day-card" id="dayCard"></div>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="map-legend">🍁 <span>Tappe di oggi, in ordine</span></div>
   </div>
 
-  <!-- RITORNO -->
-  <div class="flight-section-title">🛬 VOLO DI RITORNO — Lunedì 23 Nov 2026</div>
+  <div class="timeline" id="timeline"></div>
 
-  <div class="flight-card">
-    <div class="flight-header-row">
-      <b>Tratta 1: Tokyo Haneda → Monaco</b>
-      <span class="flight-badge">LH715 / LH4923</span>
-    </div>
-    <div class="flight-route">
-      <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
-      <div class="flight-arrow">➔</div>
-      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
-    </div>
-    <div class="flight-times">
-      <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
-      <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
-    </div>
-    <div style="margin-top:8px;">
-      <a href="https://www.flightaware.com/live/flight/LH715" target="_blank" rel="noopener" class="btn-map" style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715 Live</a>
-    </div>
-  </div>
-
-  <div class="layover-box">
-    ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
-  </div>
-
-  <div class="flight-card">
-    <div class="flight-header-row">
-      <b>Tratta 2: Monaco → Milano</b>
-      <span class="flight-badge">EN / LH</span>
-    </div>
-    <div class="flight-route">
-      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
-      <div class="flight-arrow">➔</div>
-      <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
-    </div>
-    <div class="flight-times">
-      <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
-      <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
-    </div>
-  </div>
-
-  <div style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
-    💡 <b>Info Bagagli & Check-in:</b>
-    <ul style="margin:4px 0 0; padding-left:16px;">
-      <li>Check-in online disponibile 24 ore prima del decollo.</li>
-      <li><b>Bagagli in stiva:</b> Economy Standard = 1 valigia (max 23 kg); Premium Economy = 2 valigie (max 23 kg ciascuna).</li>
-      <li><b>Bagaglio a mano:</b> 1 pezzo fino a 8 kg + 1 borsetta/zainetto personale.</li>
-      <li>Compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
-    </ul>
+  <div class="bottom-nav">
+    <button id="prevBtn">← Giorno prec.</button>
+    <div class="center" id="dayCounter">1 / 14</div>
+    <button id="nextBtn">Giorno succ. →</button>
   </div>
 </div>
+
+<!-- SCHERMATA DETTAGLIO OVERLAY -->
+<div class="detail-page" id="detailPage">
+  <div class="detail-hero">
+    <button class="detail-close" id="detailClose">‹ Torna all'itinerario</button>
+    <div class="detail-icon" id="dIcon"></div>
+    <p class="detail-eyebrow" id="dEyebrow"></p>
+    <h2 class="detail-title" id="dTitle"></h2>
+    <p class="detail-time" id="dTime"></p>
+  </div>
+  <div class="detail-body" id="dBody"></div>
+</div>
+
+<!-- SCHERMATA KANJI A SCHERMO INTERO -->
+<div class="kanji-modal" id="kanjiModal">
+  <div class="kanji-header-note">🚖 Mostra questo schermo al tassista o ai passanti:</div>
+  <div class="kanji-display-text" id="kanjiText">---</div>
+  <div class="kanji-romaji-text" id="kanjiRomaji">---</div>
+  <button class="kanji-close-btn" id="kanjiCloseBtn">✕ Chiudi Schermo</button>
+</div>
+
+<!-- MODALE CALCOLATORE CAMBIO -->
+<div class="calc-modal" id="calcModal">
+  <div class="calc-card">
+    <button class="calc-close" id="calcCloseBtn">✕</button>
+    <h3 class="calc-title">🧮 Calcolatore Cambio</h3>
+    <div class="calc-rate-row">
+      <span>Tasso: 1 EUR =</span>
+      <input type="number" id="exchangeRate" value="165" step="0.5">
+      <span>JPY</span>
+    </div>
+    <div class="calc-inputs">
+      <div class="calc-field">
+        <label>Giappone (Yen - ¥)</label>
+        <input type="number" id="inputJpy" placeholder="es. 1000">
+      </div>
+      <div class="calc-field">
+        <label>Euro (€)</label>
+        <input type="number" id="inputEur" placeholder="es. 6.00">
+      </div>
+    </div>
+    <div class="quick-jpy">
+      <button data-v="500">500 ¥</button>
+      <button data-v="1000">1.000 ¥</button>
+      <button data-v="3000">3.000 ¥</button>
+      <button data-v="5000">5.000 ¥</button>
+      <button data-v="10000">10.000 ¥</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE DETTAGLIO VOLI -->
+<div class="calc-modal" id="flightsModal">
+  <div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
+    <button class="calc-close" id="flightsCloseBtn">✕</button>
+    <h3 class="calc-title">✈️ Voli & Operativi</h3>
+    <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air Dolomiti</b></p>
+
+    <!-- ANDATA -->
+    <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
+    
+    <div class="flight-card">
+      <div class="flight-header-row">
+        <b>Tratta 1: Milano → Monaco</b>
+        <span class="flight-badge">EN / LH</span>
+      </div>
+      <div class="flight-route">
+        <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
+        <div class="flight-arrow">➔</div>
+        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
+      </div>
+      <div class="flight-times">
+        <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
+        <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
+      </div>
+    </div>
+
+    <div class="layover-box">
+      ⏱️ <b>Scalo a Monaco (MUC):</b> 3 ore e 05 minuti
+    </div>
+
+    <div class="flight-card">
+      <div class="flight-header-row">
+        <b>Tratta 2: Monaco → Tokyo Haneda</b>
+        <span class="flight-badge">Lufthansa LH714</span>
+      </div>
+      <div class="flight-route">
+        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
+        <div class="flight-arrow">➔</div>
+        <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
+      </div>
+      <div class="flight-times">
+        <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
+        <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
+        <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
+      </div>
+    </div>
+
+    <!-- RITORNO -->
+    <div class="flight-section-title">🛬 VOLO DI RITORNO — Lunedì 23 Nov 2026</div>
+
+    <div class="flight-card">
+      <div class="flight-header-row">
+        <b>Tratta 1: Tokyo Haneda → Monaco</b>
+        <span class="flight-badge">LH4923 / LH715</span>
+      </div>
+      <div class="flight-route">
+        <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
+        <div class="flight-arrow">➔</div>
+        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
+      </div>
+      <div class="flight-times">
+        <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
+        <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
+      </div>
+    </div>
+
+    <div class="layover-box">
+      ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
+    </div>
+
+    <div class="flight-card">
+      <div class="flight-header-row">
+        <b>Tratta 2: Monaco → Milano</b>
+        <span class="flight-badge">EN / LH</span>
+      </div>
+      <div class="flight-route">
+        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
+        <div class="flight-arrow">➔</div>
+        <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
+      </div>
+      <div class="flight-times">
+        <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
+        <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
+      💡 <b>Info Bagagli & Check-in:</b>
+      <ul style="margin:4px 0 0; padding-left:16px;">
+        <li>Check-in online disponibile 24 ore prima del decollo.</li>
+        <li>1 bagaglio da stiva (max 23 kg) + 1 bagaglio a mano (max 8 kg).</li>
+        <li>Ricordati di compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ============================= DATI VIAGGIO ============================= */
+const DAYS = [
+{
+  date:"2026-11-11", dow:"Mer", num:"11", city:"In viaggio", title:"Partenza dall'Italia",
+  note:"Volo Lufthansa <b>MXP → MUC → HND</b>. Partenza 06:05, pernottamento a bordo.",
+  stops:[
+    {time:"06:05", icon:"✈️", cat:"Trasporto", title:"Decollo da Milano Malpensa", kanji:"ミラノ・マルペンサ空港", lat:45.6306, lng:8.7281,
+     detail:"Partenza dall'aeroporto di Malpensa (MXP) con scalo a Monaco di Baviera (MUC), coincidenza per Tokyo Haneda alle 10:25.",
+     long:"Il volo Lufthansa/ANA/Air Dolomiti prevede la notte e i pasti a bordo del tratto intercontinentale Monaco–Tokyo. È il momento buono per regolare l'orologio interno sull'ora giapponese (8 ore avanti rispetto all'Italia) e dormire il più possibile: l'arrivo a Haneda è alle prime ore del mattino locale, e la prima giornata a Tokyo comincerà praticamente subito dopo lo sbarco.",
+     info:[{k:"Scalo",v:"Monaco di Baviera (MUC)"},{k:"Durata totale",v:"~13 ore incl. scalo"},{k:"Fuso orario",v:"Giappone: +8h su Italia"}],
+     tip:"Attivate già in aeroporto un'app di traduzione offline e scaricate le mappe di Tokyo, utili appena atterrati.",
+     official:"https://www.lufthansa.com/"}
+  ]
+},
+{
+  date:"2026-11-12", dow:"Gio", num:"12", city:"Tokyo · Asakusa", title:"Arrivo a Tokyo & Asakusa",
+  note:"Check-in <b>HOTEL TAVINOS Asakusa</b> (15:00–24:00). 🚉 Haneda → Asakusa ~30-40 min.",
+  stops:[
+    {time:"06:55", icon:"🛬", cat:"Arrivo", title:"Arrivo a Tokyo Haneda (HND)", kanji:"羽田空港 第3ターミナル", lat:35.5494, lng:139.7798,
+     detail:"Sbarco, controlli doganali, ritiro del Pocket Wi-Fi o attivazione eSIM e configurazione delle tessere IC (Suica/Pasmo).",
+     long:"Haneda è l'aeroporto più vicino al centro di Tokyo e tra i più efficienti al mondo. Dopo l'immigrazione e il ritiro bagagli, ci sono banchi dedicati per il noleggio Pocket Wi-Fi (prenotato in anticipo) e macchinette per le tessere IC Suica/Pasmo, che si usano su ogni treno, bus e in molti negozi di tutto il Giappone.",
+     info:[{k:"Connessione a Tokyo",v:"Monorotaia o Keikyu Line"},{k:"Tessera IC",v:"Suica o Pasmo"},{k:"Dogana",v:"Modulo digitale Visit Japan Web consigliato"}],
+     tip:"Compilate online il modulo Visit Japan Web prima della partenza: velocizza molto i controlli doganali e di immigrazione.",
+     official:"https://tokyo-haneda.com/en/"},
+    {time:"09:30", icon:"🛌", cat:"Alloggio", title:"Deposito bagagli — Hotel Tavinos Asakusa", kanji:"ホテルタビノス浅草", lat:35.7113, lng:139.7967,
+     detail:"Collegamento diretto via treno/monorotaia dall'aeroporto verso Asakusa (~30-40 min). Check-in ufficiale dalle 15:00, ma è possibile depositare i bagagli prima.",
+     long:"L'Hotel Tavinos Asakusa si trova a pochi passi dal tempio Sensō-ji, in una delle zone più caratteristiche e vivaci di Tokyo, con ristoranti tradizionali, negozi di artigianato e un'atmosfera da 'vecchia Tokyo' (shitamachi). Depositando subito i bagagli in reception si può iniziare a esplorare la città senza pesi.",
+     info:[{k:"Check-in",v:"15:00 – 24:00"},{k:"Check-out",v:"06:00 – 11:00"},{k:"Zona",v:"Asakusa"}],
+     tip:"Chiedete in reception una cartina cartacea del quartiere: è spesso più dettagliata delle app per i vicoli minori."},
+    {time:"11:00", icon:"⛩️", cat:"Tempio", title:"Tempio Sensō-ji e Nakamise-dōri", kanji:"浅草寺 / 仲見世通り", lat:35.7148, lng:139.7967,
+     detail:"Il più antico tempio buddista di Tokyo, dedicato alla dea Kannon. Si accede dalla porta Kaminarimon con la sua grande lanterna rossa, proseguendo lungo Nakamise-dōri tra bancarelle di souvenir e street food tradizionale.",
+     long:"Fondato secondo la tradizione nel 645 d.C., il Sensō-ji è il tempio più antico di Tokyo e uno dei più visitati al mondo. Oltre la porta Kaminarimon, la via commerciale Nakamise-dōri existe da secoli e offre dolci tradizionali come i ningyo-yaki. Superata una seconda porta, la Hōzōmon, si arriva alla sala principale con l'incensiere Jōkōro, dove per tradizione ci si 'lava' con il fumo per propiziare salute e fortuna.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Orario tempio",v:"Cortile sempre aperto, sala principale 6:00–17:00 ca."},{k:"Durata consigliata",v:"1 – 1,5 ore"}],
+     tip:"Arrivate prima delle 9:00 o dopo le 18:00 per godervi la porta Kaminarimon senza folla, specialmente per le foto.",
+     official:"https://www.senso-ji.jp/"},
+    {time:"15:30", icon:"🌆", cat:"Panorama", title:"Passeggiata lungo il Sumida e Tokyo Skytree", kanji:"東京スカイツリー / 隅田公園", lat:35.7110, lng:139.8010,
+     detail:"Passeggiata sull'argine del fiume Sumida con vista sulla Tokyo Skytree (634 m), la torre di trasmissione più alta del Giappone, spettacolare al tramonto.",
+     long:"Il Sumida Park, che costeggia il fiume tra Asakusa e la Skytree, è celebre per i ciliegi in primavera e per la vista libera e gratuita sulla torre, il cui design a triangolo si stringe salendo. Di sera la struttura si illumina con motivi che cambiano a seconda delle stagioni e delle occasioni speciali.",
+     info:[{k:"Costo passeggiata",v:"Gratuito"},{k:"Salita in torre",v:"A pagamento, opzionale"},{k:"Momento migliore",v:"Tramonto / dopo il buio"}],
+     tip:"Non è necessario salire sulla torre: la vista dal parco, con il riflesso sul fiume, è già uno degli scatti più iconici di Tokyo."},
+    {time:"19:00", icon:"🍜", cat:"Cibo", title:"Cena: ramen o tempura ad Asakusa", kanji:"浅草駅周辺 (Asakusa Station area)", lat:35.7120, lng:139.7960,
+     detail:"Cena rilassante in uno dei ristoranti tradizionali del quartiere, seguita da riposo precoce per smaltire il jet-lag.",
+     long:"Asakusa conserva molte insegne storiche di ramen-ya e tempura-ya, alcune attive da generazioni. È il pasto ideale per il primo giorno: caldo, riconfortante e servito rapidamente, utile dopo un lungo volo e una giornata a piedi.",
+     info:[{k:"Prezzo medio",v:"1.000 – 2.500 ¥"},{k:"Consiglio",v:"Locali con distributore automatico di biglietti sono spesso i più autentici"}],
+     tip:"Andate a dormire presto: la seconda notte è quella in cui il jet-lag si fa sentire di più."}
+  ]
+},
+{
+  date:"2026-11-13", dow:"Ven", num:"13", city:"Tokyo", title:"Museo Ghibli, Harajuku & Shinjuku",
+  note:"Biglietti Ghibli acquistati in prevendita fissa (10 ottobre, Lawson Ticket).",
+  stops:[
+    {time:"09:00", icon:"🎬", cat:"Museo", title:"Museo Ghibli (Mitaka)", kanji:"三鷹の森ジブリ美術館", lat:35.6963, lng:139.5704,
+     detail:"Museo ideato da Hayao Miyazaki con ricostruzioni scenografiche, disegni originali, un cinema con cortometraggi esclusivi e il celebre robot di 'Laputa' sul tetto.",
+     long:"Il Museo Ghibli non è un museo tradizionale: non ci sono percorsi obbligati né tante didascalie, ma stanze da esplorare liberamente, ricche di dettagli pensati per stimolare la curiosità di grandi e piccoli. Il piccolo cinema Saturn Theater proietta cortometraggi originali dello Studio Ghibli, visibili solo qui. Il tetto ospita il robot soldato tratto da 'Laputa - Castello nel cielo', diventato uno dei simboli più fotografati del museo.",
+     info:[{k:"Ingresso",v:"A orario fissato, biglietto nominale"},{k:"Foto",v:"Vietate all'interno, permesse in giardino/tetto"},{k:"Durata consigliata",v:"2 – 3 ore"}],
+     tip:"I biglietti si esauriscono in pochi minuti il giorno della vendita: se non li avete già, verificate sempre il sito ufficiale per eventuali rivendite last-minute.",
+     official:"https://www.ghibli-museum.jp/en/"},
+    {time:"11:15", icon:"🌳", cat:"Parco", title:"Parco Inokashira", kanji:"井の頭恩賜公園", lat:35.7009, lng:139.5745,
+     detail:"Ampio parco con laghetto navigabile a pedalò, splendido nei colori del foliage autunnale. Adiacente al Museo Ghibli.",
+     long:"Nato all'inizio del '900 come uno dei primi parchi pubblici in stile occidentale del Giappone, Inokashira è oggi un ritrovo per famiglie e artisti di strada nei weekend. Il laghetto centrale, circondato da aceri e zelkove, regala riflessi dorati e rossi in questo periodo dell'anno.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Pedalò",v:"A pagamento, stagionale"},{k:"Durata consigliata",v:"30 – 45 min"}],
+     tip:"C'è una leggenda locale secondo cui le coppie che vanno in pedalò sul lago si lasceranno: prendetela con ironia."},
+    {time:"13:30", icon:"⛩️", cat:"Tempio", title:"Santuario Meiji Jingu", kanji:"明治神宮", lat:35.6764, lng:139.6993,
+     detail:"Santuario shintoista dedicato all'imperatore Meiji, immerso in una foresta artificiale di circa 100.000 alberi nel cuore di Tokyo.",
+     long:"Costruito nel 1920 in onore dell'imperatore Meiji e della consorte, il santuario fu completamente ricostruito dopo i bombardamenti della Seconda Guerra Mondiale. La foresta che lo circonda, con alberi donati da tutto il Giappone, è oggi un ecosistema maturo che sembra esistere da secoli: appena entrati dal grande torii, il rumore della città scompare quasi del tutto.",
+     info:[{k:"Ingresso",v:"Gratuito (a pagamento il giardino interno Gyoen)"},{k:"Orario",v:"Alba – tramonto"},{k:"Durata consigliata",v:"45 min – 1 ora"}],
+     tip:"Nei weekend è frequente imbattersi in cerimonie di matrimonio shintoista in costume tradizionale: osservate con discrezione da lontano.",
+     official:"https://www.meijijingu.or.jp/en/"},
+    {time:"15:00", icon:"🛍️", cat:"Quartiere", title:"Takeshita Street & Omotesandō", kanji:"竹下通り / 表参道", lat:35.6702, lng:139.7026,
+     detail:"Takeshita Street è il cuore della moda giovanile e della cultura kawaii; Omotesandō è l'elegante viale alberato con boutique di lusso e architetture di design.",
+     long:"Takeshita Street, lunga solo 350 metri, è considerata l'epicentro delle mode giovanili giapponesi dagli anni '80 a oggi: crêperie coloratissime, negozi di cosplay e fast fashion locale. A pochi passi, Omotesandō è il suo opposto: viale ampio, alberato di zelkove, con flagship store progettati da archistar internazionali.",
+     info:[{k:"Ingresso",v:"Libero"},{k:"Consigliato per",v:"Shopping, street food, fotografia"},{k:"Durata consigliata",v:"1,5 – 2 ore"}],
+     tip:"Provate un crepe farcito a Takeshita Street: è quasi un rito di passaggio per chi visita Harajuku."},
+    {time:"17:00", icon:"🗡️", cat:"Museo", title:"Samurai Museum (Shinjuku)", kanji:"サムライミュージアム", lat:35.6944, lng:139.7036,
+     detail:"Collezione privata di armature e spade, con possibilità di tour guidati ed esperienze interattive con la spada tradizionale.",
+     long:"Il museo raccoglie armature (yoroi), elmi e spade dal periodo Muromachi a quello Edo, con guide spesso disponibili in inglese che raccontano la storia dei samurai in modo coinvolgente. Sono previsti anche show dal vivo di combattimento con la spada e possibilità di indossare un'armatura per una foto.",
+     info:[{k:"Ingresso",v:"A pagamento"},{k:"Lingua",v:"Tour guidati in inglese disponibili"},{k:"Durata consigliata",v:"45 min – 1 ora"}],
+     tip:"Prenotare online in anticipo per assicurarsi l'orario del tour guidato, spesso più interessante della sola visita libera.",
+     official:"https://www.samuraimuseum.jp/"},
+    {time:"18:30", icon:"🌆", cat:"Panorama", title:"Vista panoramica: Tokyo Met. Gov. Building / Shibuya Sky", kanji:"東京都庁 / 渋谷スカイ", lat:35.6892, lng:139.6917,
+     detail:"Vista sulla metropoli dall'osservatorio gratuito del Tokyo Metropolitan Government Building, oppure dalla terrazza a cielo aperto di Shibuya Sky.",
+     long:"Il Tokyo Metropolitan Government Building, progettato da Kenzo Tange, ha due osservatori gemelli a 202 metri, gratuiti e aperti fino a tarda sera: nelle giornate limpide si vede persino il Monte Fuji. Shibuya Sky, più recente e a pagamento, offre invece una terrazza scoperta a 230 metri con vista sull'incrocio di Shibuya dall'alto.",
+     info:[{k:"TMG Building",v:"Gratuito"},{k:"Shibuya Sky",v:"A pagamento, prenotazione consigliata"},{k:"Momento migliore",v:"Al tramonto"}],
+     tip:"Se il budget è limitato, il TMG Building offre una vista quasi altrettanto bella gratis: perfetto se avete già speso per Shibuya Sky in altri giorni.",
+     official:"https://www.shibuya-scramble-square.com/sky/en/"},
+    {time:"20:00", icon:"🏮", cat:"Cibo", title:"Cena a Omoide Yokochō", kanji:"思い出横丁", lat:35.6938, lng:139.6997,
+     detail:"Stretta viuzza vicino a Shinjuku con decine di piccoli locali di yakitori e izakaya, atmosfera nostalgica del dopoguerra.",
+     long:"Conosciuta informalmente anche come 'Piccadilly Alley', questa viuzza sopravvissuta alla riqualificazione urbana conserva l'atmosfera dei chioschi del dopoguerra: locali minuscoli, spesso da 6-8 posti, specializzati in yakitori (spiedini di pollo alla griglia) e sake.",
+     info:[{k:"Prezzo medio",v:"1.500 – 3.000 ¥"},{k:"Atmosfera",v:"Informale, spesso in piedi o su sgabelli"}],
+     tip:"Molti locali hanno un coperto (otoshi) da pochi yen: è normale, fa parte dell'usanza giapponese."}
+  ]
+},
+{
+  date:"2026-11-14", dow:"Sab", num:"14", city:"Tokyo", title:"Tunnel di Ginkgo, Battello & Akihabara",
+  note:"",
+  stops:[
+    {time:"09:00", icon:"🍁", cat:"Natura", title:"Meiji Jingu Gaien — Ginkgo Avenue", kanji:"明治神宮外苑 イチョウ並木", lat:35.6746, lng:139.7178,
+     detail:"Il celebre 'tunnel dorato' formato da oltre 140 ginkgo secolari, spettacolare a metà/fine novembre.",
+     long:"Il viale Icho Namiki, lungo circa 300 metri, fu piantato negli anni '20 per commemorare l'imperatore Meiji. A fine novembre le foglie a ventaglio dei ginkgo virano tutte insieme a un giallo dorato intenso, creando un tunnel naturale molto fotografato, con al fondo la sagoma dello stadio olimpico.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Periodo migliore",v:"Metà – fine novembre"},{k:"Durata consigliata",v:"30 – 45 min"}],
+     tip:"Il weekend è molto affollato: se possibile andateci nei giorni feriali o di prima mattina."},
+    {time:"11:00", icon:"🌳", cat:"Parco", title:"Parco di Ueno & mercato di Ameyoko", kanji:"上野恩賜公園 / アメ横", lat:35.7141, lng:139.7744,
+     detail:"Grande parco storico con templi, musei e ginkgo dorati; adiacente il mercato popolare di Ameyoko, nato come mercato nero nel dopoguerra.",
+     long:"Il Parco di Ueno, uno dei primi parchi pubblici del Giappone (1873), ospita musei nazionali, un piccolo santuario shinto e un tempio buddista, oltre a un laghetto con fior di loto. Subito a sud, il mercato di Ameyoko si snoda sotto e accanto ai binari della ferrovia con centinaia di bancarelle di cibo, spezie e abbigliamento a prezzi scontati.",
+     info:[{k:"Ingresso parco",v:"Gratuito"},{k:"Ameyoko",v:"Aperto tutto il giorno, più vivace nel weekend"},{k:"Durata consigliata",v:"1 – 1,5 ore"}],
+     tip:"Ad Ameyoko si può fare un pranzo veloce e informale in piedi tra le bancarelle di pesce e frutti di mare."},
+    {time:"14:00", icon:"⛴️", cat:"Esperienza", title:"Crociera sul fiume Sumida (Tokyo Cruise)", kanji:"東京都水上バス (浅草乗り場)", lat:35.7100, lng:139.8003,
+     detail:"Battello panoramico verso i Giardini Hama Rikyu o l'isola di Odaiba, spesso a bordo di imbarcazioni futuristiche come Himiko o Hotaluna.",
+     long:"Le imbarcazioni Himiko e Hotaluna sono state disegnate dal fumettista Leiji Matsumoto (Capitan Harlock, Galaxy Express 999) e hanno un design fantascientifico che contrasta volutamente con i ponti storici e i quartieri tradizionali che si attraversano lungo il tragitto.",
+     info:[{k:"Durata tragitto",v:"35 – 50 min a seconda della tratta"},{k:"Biglietti",v:"Acquistabili online o al molo"},{k:"Consiglio",v:"Posto vicino al finestrino per le foto"}],
+     tip:"Se il tempo lo permette, la tratta verso Odaiba regala anche uno scorcio della Rainbow Bridge.",
+     official:"https://www.suijobus.co.jp/en/"},
+    {time:"16:00", icon:"🎮", cat:"Quartiere", title:"Akihabara", kanji:"秋葉原駅", lat:35.6984, lng:139.7731,
+     detail:"Il quartiere dell'elettronica, dei manga e dei videogiochi, con negozi multipiano e sale games.",
+     long:"Nato come mercato dell'elettronica nel dopoguerra, Akihabara si è evoluto nella capitale mondiale della cultura otaku: negozi di manga e figure da collezione, sale giochi retrò con decine di piani, maid café e negozi di componenti elettronici di ogni tipo.",
+     info:[{k:"Ingresso",v:"Libero (a pagamento le sale giochi)"},{k:"Durata consigliata",v:"1,5 – 2 ore"}],
+     tip:"Se cercate figure da collezione usate a buon prezzo, i negozi Mandarake su più piani sono un classico."},
+    {time:"19:00", icon:"🛍️", cat:"Quartiere", title:"Passeggiata serale a Ginza", kanji:"銀座", lat:35.6717, lng:139.7650,
+     detail:"Quartiere elegante dello shopping di lusso, suggestivo di sera per le illuminazioni e le architetture moderne.",
+     long:"Ginza è il quartiere dello shopping di lusso di Tokyo fin dall'epoca Meiji: grandi magazzini storici, boutique di alta moda internazionale e architetture contemporanee firmate da grandi studi, con vetrine e illuminazioni particolarmente scenografiche la sera.",
+     info:[{k:"Ingresso",v:"Libero"},{k:"Consigliato per",v:"Passeggiata serale, vetrine, cena"}],
+     tip:"La domenica pomeriggio la via principale (Chuo-dori) diventa pedonale (hokosha tengoku): verificate se coincide con la vostra visita."}
+  ]
+},
+{
+  date:"2026-11-15", dow:"Dom", num:"15", city:"Tokyo", title:"Shibuya & Arte Digitale",
+  note:"",
+  stops:[
+    {time:"09:30", icon:"🚦", cat:"Icona", title:"Shibuya Crossing & statua di Hachikō", kanji:"渋谷スクランブル交差点 / 忠犬ハチ公像", lat:35.6595, lng:139.7005,
+     detail:"L'incrocio pedonale più trafficato al mondo. Nelle vicinanze, la statua di Hachikō, simbolo di lealtà.",
+     long:"Ad ogni cambio di semaforo, fino a 3.000 persone attraversano contemporaneamente da tutte le direzioni: un'immagine diventata simbolo della Tokyo moderna. La vicina statua di Hachikō ricorda il cane Akita che, negli anni '20, continuò ad attendere ogni giorno alla stazione il suo padrone defunto, diventando un'icona nazionale di fedeltà.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Vista dall'alto",v:"Possibile da locali/caffè affacciati sull'incrocio"}],
+     tip:"Per una foto dall'alto senza pagare un osservatorio, molti caffè con vetrata sull'incrocio (es. catene al 2° piano) sono gratuiti se si consuma qualcosa."},
+    {time:"11:00", icon:"🖼️", cat:"Museo", title:"teamLab Planets (Toyosu)", kanji:"チームラボプラネッツ TOKYO DMM", lat:35.6461, lng:139.7930,
+     detail:"Museo di arte digitale immersiva a piedi scalzi, con installazioni interattive di luce e acqua.",
+     long:"A differenza di un museo tradizionale, a teamLab Planets si cammina scalzi attraverso stanze d'acqua, specchi e proiezioni che reagiscono al movimento dei visitatori, in un percorso pensato per essere vissuto con tutto il corpo più che osservato a distanza.",
+     info:[{k:"Ingresso",v:"A orario fissato, biglietto online"},{k:"Cosa portare",v:"Pantaloncini o abiti comodi da arrotolare (si cammina nell'acqua)"},{k:"Durata consigliata",v:"1,5 ore"}],
+     tip:"Portate un asciugamano piccolo: alcune installazioni prevedono di camminare nell'acqua fino al polpaccio.",
+     official:"https://planets.teamlab.art/tokyo/"},
+    {time:"14:30", icon:"🍵", cat:"Giardino", title:"Giardini Hama Rikyu", kanji:"浜離宮恩賜庭園", lat:35.6595, lng:139.7634,
+     detail:"Giardino tradizionale circondato dai grattacieli, con laghetti di acqua salata e un'antica casa da tè su un isolotto per il matcha.",
+     long:"Ex residenza di caccia della famiglia shogunale Tokugawa, questo giardino è uno dei pochi a Tokyo ad avere un laghetto direttamente collegato alla marea della baia. La casa da tè Nakajima, su un isolotto raggiungibile a piedi, offre matcha e dolcetti tradizionali con vista sul laghetto e sui grattacieli sullo sfondo.",
+     info:[{k:"Ingresso",v:"A pagamento, economico"},{k:"Casa da tè",v:"Matcha e dolce a pagamento separato"},{k:"Durata consigliata",v:"1 ora"}],
+     tip:"Il contrasto tra il giardino Edo-period e i grattacieli di Shiodome alle spalle è una delle immagini più particolari di Tokyo."},
+    {time:"19:00", icon:"🗼", cat:"Panorama", title:"Roppongi & Tokyo Tower", kanji:"東京タワー / 六本木", lat:35.6604, lng:139.7292,
+     detail:"Cena nel quartiere di Roppongi con vista sulla Tokyo Tower illuminata.",
+     long:"Ispirata alla Tour Eiffel ma più alta di 13 metri, la Tokyo Tower resta uno dei simboli storici della città dal 1958. Roppongi, un tempo noto per la vita notturna, oggi ospita anche importanti musei d'arte contemporanea ed è un buon punto da cui ammirare la torre illuminata di arancio o, in occasioni speciali, di altri colori.",
+     info:[{k:"Ingresso torre",v:"A pagamento, opzionale"},{k:"Consigliato per",v:"Cena con vista, passeggiata serale"}],
+     tip:"Non serve salire sulla torre: molti ristoranti e rooftop di Roppongi offrono già una vista diretta e gratuita.",
+     official:"https://www.tokyotower.co.jp/en.html"}
+  ]
+},
+{
+  date:"2026-11-16", dow:"Lun", num:"16", city:"Kyoto", title:"Trasferimento a Kyoto, Kimono & Tè",
+  note:"🚄 Shinkansen Tokyo → Kyoto (~2h15). Check-in <b>Oyado Kawaramachi Gojo</b>.",
+  stops:[
+    {time:"09:00", icon:"🚄", cat:"Trasporto", title:"Shinkansen per Kyoto", kanji:"東京駅 (Shinkansen)", lat:35.6812, lng:139.7671,
+     detail:"Check-out entro le 11:00 e partenza dalla Stazione di Tokyo con lo Shinkansen ad alta velocità, circa 2 ore e 15 minuti di viaggio.",
+     long:"Lo Shinkansen Tokaido, in servizio dal 1964, viaggia a oltre 280 km/h e resta uno dei modi più comodi e puntuali per attraversare il Giappone centrale. Il tratto verso Kyoto costeggia, nelle giornate limpide, la sagoma del Monte Fuji sulla destra (uscendo da Tokyo).",
+     info:[{k:"Durata",v:"~2h15"},{k:"Posto consigliato",v:"Lato destro (E) uscendo da Tokyo, per il Fuji"},{k:"Biglietto",v:"JR Pass o biglietto singolo riservato"}],
+     tip:"Comprate un bento (ekiben) alla stazione prima di salire: è un'esperienza di viaggio in sé.",
+     official:"https://global.jr-central.co.jp/en/"},
+    {time:"13:30", icon:"👘", cat:"Esperienza", title:"Noleggio Kimono & Cerimonia del Tè", kanji:"祇園 / 東山 (Higashiyama)", lat:34.9990, lng:135.7790,
+     detail:"Esperienza tradizionale: si indossa un kimono o yukata storico e si partecipa a un'autentica cerimonia del tè (Sadō) a Higashiyama.",
+     long:"La cerimonia del tè giapponese (Sadō o Chanoyu) è un rituale codificato da secoli, in cui ogni gesto — dal modo di pulire gli utensili al modo di ruotare la tazza — ha un significato preciso legato ai principi di armonia, rispetto, purezza e tranquillità. Indossare il kimono prima di visitare i templi storici di Higashiyama rende l'esperienza ancora più immersiva.",
+     info:[{k:"Prenotazione",v:"Consigliata 1-2 mesi prima"},{k:"Durata kimono",v:"Solitamente giornata intera"},{k:"Durata cerimonia",v:"30 – 45 min"}],
+     tip:"Scegliete scarpe comode da togliere e rimettere facilmente: si entra scalzi in molte sale da tè e templi."},
+    {time:"16:00", icon:"🍁", cat:"Tempio", title:"Ninenzaka, Sannenzaka & Kiyomizu-dera", kanji:"二年坂・三年坂・清水寺", lat:34.9949, lng:135.7850,
+     detail:"Passeggiata in kimono lungo le pittoresche stradine storiche fino al tempio panoramico Kiyomizu-dera, spettacolare al tramonto.",
+     long:"Kiyomizu-dera, fondato nel 778 e patrimonio UNESCO, è celebre per la sua grande terrazza in legno costruita senza un solo chiodo, sorretta da 139 pilastri. Le due stradine acciottolate che vi conducono, Ninenzaka e Sannenzaka, sono tra le meglio conservate di Kyoto: la leggenda vuole che inciampare su questi gradini porti sfortuna per anni.",
+     info:[{k:"Ingresso tempio",v:"A pagamento, economico"},{k:"Orario",v:"Diurno, con aperture serali stagionali per il foliage"},{k:"Durata consigliata",v:"1,5 ore incl. stradine"}],
+     tip:"In stagione del Momiji il tempio apre talvolta anche di sera con illuminazioni speciali: verificate il calendario ufficiale prima della visita.",
+     official:"https://www.kiyomizudera.or.jp/en/"},
+    {time:"18:30", icon:"🏮", cat:"Cibo", title:"Gion & cena a Pontochō", kanji:"祇園 / 先斗町", lat:35.0037, lng:135.7752,
+     detail:"Passeggiata serale nello storico quartiere delle geiko e maiko, cena lungo il vicolo illuminato di Pontochō.",
+     long:"Gion è il quartiere storico dell'intrattenimento tradizionale di Kyoto, dove è ancora possibile intravedere geiko (geishe di Kyoto) e maiko (apprendiste) dirigersi agli appuntamenti serali. Pontochō, una strettissima via parallela al fiume Kamo, ospita ristoranti di ogni fascia di prezzo, molti con terrazze estive sospese sull'acqua (kawadoko, stagionali).",
+     info:[{k:"Ingresso",v:"Libero"},{k:"Consiglio etico",v:"Non fermare o inseguire le maiko per foto: sono professioniste al lavoro"}],
+     tip:"Se vedete una maiko, un saluto discreto e nessuna foto ravvicinata senza permesso è il comportamento corretto e rispettato dai locali."}
+  ]
+},
+{
+  date:"2026-11-17", dow:"Mar", num:"17", city:"Kyoto", title:"Kyoto Classica & Il Grande Foliage",
+  note:"Percorso ottimizzato: Fushimi Inari + Tōfuku-ji al mattino, Kinkaku-ji <i>oppure</i> Eikandō al pomeriggio.",
+  stops:[
+    {time:"08:00", icon:"⛩️", cat:"Tempio", title:"Fushimi Inari Taisha", kanji:"伏見稲荷大社", lat:34.9671, lng:135.7727,
+     detail:"Il sentiero dei 10.000 torii vermigli che si inerpica sul monte Inari.",
+     long:"Fushimi Inari è il principale santuario dedicato a Inari, divinità shintoista del riso, del commercio e della prosperità. I torii che formano la celebre galleria sono stati donati nel tempo da aziende e privati come ex-voto: il percorso completo fino alla cima del monte richiede 2-3 ore, ma già i primi 20-30 minuti regalano gli scorci più fotografati.",
+     info:[{k:"Ingresso",v:"Gratuito, sempre aperto"},{k:"Percorso completo",v:"2 – 3 ore andata/ritorno"},{k:"Durata consigliata",v:"45 min – 1,5 ore"}],
+     tip:"Superato il primo tratto affollato vicino all'ingresso, la folla diminuisce molto: vale la pena proseguire oltre i primi torii.",
+     official:"https://inari.jp/en/"},
+    {time:"10:30", icon:"🍁", cat:"Tempio", title:"Tōfuku-ji", kanji:"東福寺", lat:34.9773, lng:135.7739,
+     detail:"Uno dei templi migliori per il foliage, con vista sulla vallata di aceri rossi dal ponte Tsūtenkyō. 🚉 5 minuti in treno da Fushimi Inari.",
+     long:"Il tempio zen Tōfuku-ji, fondato nel XIII secolo, è famoso per la vallata Tsutenkyo, una gola coperta da centinaia di aceri che in autunno si accendono di rosso intenso, ammirabile dal ponte coperto omonimo. È considerato uno dei migliori punti panoramici sul foliage di tutta Kyoto.",
+     info:[{k:"Ingresso vallata",v:"A pagamento in stagione autunnale"},{k:"Periodo di picco",v:"Metà – fine novembre"},{k:"Durata consigliata",v:"45 min – 1 ora"}],
+     tip:"In alta stagione l'accesso al ponte può essere contingentato: mettete in conto una breve coda durante il weekend.",
+     official:"https://tofukuji.jp/"},
+    {time:"14:00", icon:"🏯", cat:"Tempio", title:"Kinkaku-ji (Padiglione d'Oro)", kanji:"金閣寺 (鹿苑寺)", lat:35.0394, lng:135.7292,
+     detail:"Tempio zen ricoperto di foglia d'oro, riflesso nello stagno antistante — una delle immagini più iconiche del Giappone.",
+     long:"Costruito originariamente come villa di un potente shogun nel XIV secolo e trasformato in tempio zen dopo la sua morte, il padiglione attuale è una ricostruzione del 1955 in seguito a un incendio doloso. I due piani superiori sono interamente ricoperti in foglia d'oro, e il suo riflesso nello stagno Kyoko-chi crea una delle vedute più fotografate del Giappone.",
+     info:[{k:"Ingresso",v:"A pagamento"},{k:"Percorso",v:"A senso unico, non si può tornare indietro"},{k:"Durata consigliata",v:"45 min"}],
+     tip:"Il punto fotografico principale si raggiunge quasi subito dopo l'ingresso: non abbiate fretta di superarlo, è il momento clou della visita.",
+     official:"https://www.shokoku-ji.jp/en/kinkakuji/"},
+    {time:"14:00", icon:"🍁", cat:"Tempio", title:"In alternativa: Eikandō", kanji:"永観堂 (禅林寺)", lat:35.0163, lng:135.7943,
+     detail:"Tra le viste più spettacolari sugli aceri rossi di tutto il Giappone, con giardino a stagno.",
+     long:"Conosciuto anche come Zenrin-ji, questo tempio della zona del Sentiero del Filosofo è considerato da molti la meta autunnale per eccellenza a Kyoto: centinaia di aceri circondano gli edifici e uno stagno panoramico, con illuminazioni serali speciali durante il picco del foliage.",
+     info:[{k:"Ingresso",v:"A pagamento, maggiorato in stagione"},{k:"Illuminazioni serali",v:"Frequenti a novembre, orari variabili"},{k:"Durata consigliata",v:"1 ora"}],
+     tip:"Se scegliete Eikandō, verificate se in quei giorni è attiva l'apertura serale con illuminazione: è un'esperienza diversa e altrettanto suggestiva rispetto al giorno.",
+     official:"https://www.eikando.or.jp/"},
+    {time:"19:00", icon:"🍜", cat:"Cibo", title:"Cena a Kawaramachi", kanji:"河原町", lat:35.0037, lng:135.7680,
+     detail:"Cena nel cuore del centro di Kyoto.",
+     long:"Kawaramachi è l'arteria commerciale e gastronomica del centro di Kyoto, con un'enorme varietà di ristoranti, dai locali di kaiseki tradizionale ai ristoranti economici lungo le gallerie coperte (shotengai).",
+     info:[{k:"Prezzo medio",v:"1.500 – 4.000 ¥"}],
+     tip:"Le gallerie coperte Teramachi e Shinkyogoku, parallele a Kawaramachi, hanno spesso locali più economici e autentici."}
+  ]
+},
+{
+  date:"2026-11-18", dow:"Mer", num:"18", city:"Kyoto · Arashiyama", title:"Arashiyama & Natura Autunnale",
+  note:"",
+  stops:[
+    {time:"09:00", icon:"🎋", cat:"Natura", title:"Foresta di Bambù di Arashiyama", kanji:"嵐山 竹林の小径", lat:35.0170, lng:135.6717,
+     detail:"Uno dei paesaggi più fotografati del Giappone: un sentiero tra fitti bambù giganti dove la luce filtra dall'alto.",
+     long:"Il boschetto di bambù di Arashiyama si estende per circa 500 metri e il fruscio delle canne mosse dal vento è stato inserito ufficialmente tra i '100 paesaggi sonori del Giappone' da preservare. Camminando tra i fusti alti fino a 20 metri, la luce filtra creando giochi d'ombra quasi ipnotici.",
+     info:[{k:"Ingresso",v:"Gratuito, sempre accessibile"},{k:"Momento migliore",v:"Prima delle 8:30, prima della folla"},{k:"Durata consigliata",v:"20 – 30 min"}],
+     tip:"È uno dei luoghi più affollati di Kyoto entro metà mattina: se potete, anticipate l'orario di visita rispetto al programma."},
+    {time:"10:30", icon:"🧘", cat:"Tempio", title:"Tempio Tenryū-ji", kanji:"天龍寺", lat:35.0159, lng:135.6742,
+     detail:"Capofila dei templi zen di Kyoto (UNESCO), noto per il giardino Sōgen-chi che integra le colline circostanti.",
+     long:"Fondato nel 1339, Tenryū-ji è il primo dei 'Cinque Grandi Templi Zen' di Kyoto. Il suo giardino Sōgen-chi, attribuito al celebre maestro Musō Soseki, è uno dei rari esempi di giardino giapponese sopravvissuto praticamente intatto dal periodo Kamakura, e utilizza la tecnica dello 'shakkei' (paesaggio preso in prestito) per integrare visivamente le colline di Arashiyama nel disegno del giardino.",
+     info:[{k:"Ingresso",v:"A pagamento (supplemento per gli edifici interni)"},{k:"Durata consigliata",v:"45 min – 1 ora"}],
+     tip:"C'è un'uscita laterale dal giardino che immette direttamente nella foresta di bambù: comodo per proseguire il percorso senza tornare indietro.",
+     official:"https://www.tenryuji.com/en/"},
+    {time:"13:00", icon:"🚂", cat:"Esperienza", title:"Sagano Romantic Train", kanji:"嵯峨野トロッコ列車", lat:35.0139, lng:135.6776,
+     detail:"Trenino panoramico che percorre le gole del fiume Hozu, tra colline colorate dal Momiji.",
+     long:"Questo trenino turistico a scartamento ridotto riutilizza un vecchio tracciato ferroviario dismesso e percorre circa 7 km lungo le spettacolari gole del fiume Hozugawa in circa 25 minuti, a bassa velocità, apposta per godersi il panorama: in autunno le pareti della gola si accendono di rosso e arancio.",
+     info:[{k:"Durata tragitto",v:"~25 minuti"},{k:"Biglietti",v:"Con posto assigned, prenotabili in anticipo"},{k:"Un vagone",v:"Semi-aperto, panoramico"}],
+     tip:"In alta stagione i biglietti si esauriscono rapidamente: se possibile, prenotateli con un anticipo di alcuni giorni.",
+     official:"https://www.sagano-kanko.co.jp/en/"},
+    {time:"19:00", icon:"🍜", cat:"Cibo", title:"Rientro e cena a Kyoto centro", kanji:"京都駅周辺 / 河原町", lat:35.0037, lng:135.7680,
+     detail:"Cena nel centro città dopo la giornata ad Arashiyama.",
+     long:"Dopo una giornata immersi nella natura, il rientro verso il centro di Kyoto (Kawaramachi/Gion) offre ampia scelta per la cena, dai ristoranti di cucina Kyoto tradizionale (obanzai) ai locali più informali.",
+     info:[{k:"Prezzo medio",v:"1.500 – 4.000 ¥"}],
+     tip:"L'obanzai, la cucina casalinga di Kyoto a base di piccoli piatti stagionali, è un'ottima scelta per assaggiare più sapori locali insieme."}
+  ]
+},
+{
+  date:"2026-11-19", dow:"Gio", num:"19", city:"Takao", title:"Valle di Takao & Ryokan",
+  note:"🚌 Kyoto → Takao ~50-60 min. Check-in <b>Momiji-ya Annex</b> 15:00–18:00.",
+  stops:[
+    {time:"10:00", icon:"🚌", cat:"Trasporto", title:"Check-out e trasferimento a Takao", kanji:"高雄 (Takao Bus Stop)", lat:35.0037, lng:135.7680,
+     detail:"Check-out da Oyado Kawaramachi Gojo entro le 10:00, trasferimento in autobus verso la valle boscosa di Takao, a nord-ovest di Kyoto.",
+     long:"La valle di Takao, spesso trascurata dai turisti rispetto ai luoghi più centrali, è considerata da molti appassionati locali una delle zone con il foliage più spettacolare e meno affollato di tutta l'area di Kyoto, grazie alla combinazione di montagne, fiumi e templi immersi nel bosco.",
+     info:[{k:"Durata tragitto",v:"~50-60 min in autobus (JR Bus o Kyoto Bus)"}],
+     tip:"Portate con voi solo l'essenziale per la giornata: gran parte del bagaglio pesante può restare in custodia o essere spedito, come previsto per la tappa successiva a Osaka."},
+    {time:"11:30", icon:"⛩️", cat:"Tempio", title:"Tempio Jingo-ji", kanji:"神護寺", lat:35.0665, lng:135.6748,
+     detail:"Antico tempio su una collina boscosa, raggiungibile con una lunga scalinata; celebre per il rito del kawarake-nage e per il foliage spettacolare.",
+     long:"Fondato nell'VIII secolo, Jingo-ji si raggiunge salendo circa 400 gradini immersi nel bosco, un piccolo sforzo ripagato da una delle viste più belle sul foliage della zona. Il tempio è famoso per il kawarake-nage: si lanciano piccoli dischi di terracotta da uno strapiombo, un gesto tradizionale per scacciare le energie negative.",
+     info:[{k:"Ingresso",v:"A pagamento, economico"},{k:"Accesso",v:"~400 gradini in salita dal fiume"},{k:"Durata consigliata",v:"1 ora"}],
+     tip:"Provate il kawarake-nage: i dischetti di terracotta si acquistano sul posto a pochi yen ed è un'esperienza divertente oltre che scenografica."},
+    {time:"13:30", icon:"🍁", cat:"Tempio", title:"Tempio Saimyō-ji", kanji:"西明寺", lat:35.0645, lng:135.6720,
+     detail:"Piccolo tempio immerso nel verde della valle, con un suggestivo ponte rosso circondato dagli aceri.",
+     long:"Più raccolto e meno visitato di Jingo-ji, Saimyō-ji si trova più in basso nella valle, vicino al fiume, ed è celebre soprattutto per il piccolo ponte rosso laccato che si staglia contro gli aceri, uno degli scorci più fotografati (ma poco noti) della zona.",
+     info:[{k:"Ingresso",v:"A pagamento, economico"},{k:"Durata consigliata",v:"30 – 45 min"}],
+     tip:"Il ponte rosso è più suggestivo nelle ore centrali della giornata, quando la luce filtra meglio tra gli aceri."},
+    {time:"15:30", icon:"♨️", cat:"Alloggio", title:"Arrivo al Ryokan Momiji-ya Annex Kawa-no-Iori", kanji:"もみじ家別館 川の庵", lat:35.0670, lng:135.6740,
+     detail:"Si attraversa a piedi un ponte sospeso privato sopra il fiume Kiyotaki per accedere alla struttura riservata nella foresta. Bagno privato/onsen affacciato sul fiume, cena Kaiseki d'autunno, pernottamento su tatami e futon.",
+     long:"Un ryokan (locanda tradizionale giapponese) di questo tipo offre un'esperienza molto diversa da un hotel: stanze in stile washitsu con tatami e futon stesi la sera dal personale, yukata da indossare per tutto il soggiorno, e una cena Kaiseki, un menù degustazione stagionale composto da molte piccole portate curate nella presentazione quanto nel sapore. Il bagno privato affacciato sul fiume Kiyotaki è pensato per un'immersione rilassante con vista sulla natura, particolarmente suggestiva in questo periodo di foliage.",
+     info:[{k:"Check-in",v:"15:00 – 18:00"},{k:"Check-out (giorno dopo)",v:"07:30 – 10:00"},{k:"Cena",v:"Kaiseki d'autunno inclusa"}],
+     tip:"Indossate l'yukata fornito anche a cena: è pienamente accettato e fa parte dell'esperienza del ryokan."}
+  ]
+},
+{
+  date:"2026-11-20", dow:"Ven", num:"20", city:"Takao → Nara → Osaka", title:"Ryokan, Nara e Street Food a Osaka",
+  note:"⚠️ Spedire i bagagli pesanti dal ryokan a Osaka via takkyubin, per girare Nara con solo un bagaglio a mano.",
+  stops:[
+    {time:"08:30", icon:"🍚", cat:"Alloggio", title:"Colazione al ryokan & spedizione bagagli", kanji:"宅急便 (Takkyubin)", lat:35.0670, lng:135.6740,
+     detail:"Colazione tradizionale con vista sulla natura di Takao. Check-out entro le 10:00, organizzando in reception la spedizione dei bagagli pesanti verso l'hotel di Osaka.",
+     long:"Il servizio takkyubin (es. Yamato Transport / Kuroneko) è un corriere bagagli molto affidabile e diffuso in Giappone: consegna spesso in giornata o il giorno successivo, e permette di girare città come Nara con il solo bagaglio a mano, rendendo la giornata di trasferimento molto più agevole.",
+     info:[{k:"Servizio",v:"Takkyubin (Yamato/Kuroneko)"},{k:"Consegna",v:"Stesso giorno in tarda serata o giorno successivo"},{k:"Da chiedere",v:"Opzione consegna in giornata in reception"}],
+     official:"https://www.kuronekoyamato.co.jp/en/",
+     tip:"Tenete con voi solo l'essenziale per la giornata: cambio, documenti, macchina fotografica e l'occorrente per il pranzo a Nara."},
+    {time:"11:30", icon:"🦌", cat:"Natura", title:"Parco di Nara", kanji:"奈良公園", lat:34.6851, lng:135.8430,
+     detail:"Oltre mille cervi sika vivono liberi nel parco, considerati messaggeri divini secondo la tradizione shintoista.",
+     long:"I cervi di Nara sono protetti come 'tesoro nazionale naturale' e si sono ormai abituati completamente ai visitatori, arrivando a inchinarsi leggermente per chiedere gli shika senbei, gli appositi biscotti di riso venduti dalle bancarelle nel parco, unico cibo che dovrebbe essere loro offerto.",
+     info:[{k:"Ingresso parco",v:"Gratuito"},{k:"Biscotti per i cervi",v:"Acquistabili sul posto, poche centinaia di yen"},{k:"Attenzione",v:"Alcuni cervi possono essere insistenti: non agitare il cibo davanti a loro"}],
+     tip:"Se non volete essere 'inseguiti', finite di dare il biscotto tutto in una volta e mostrate subito le mani vuote.",
+     official:"https://nara-park.com/en/"},
+    {time:"13:00", icon:"🛕", cat:"Tempio", title:"Tempio Tōdai-ji", kanji:"東大寺", lat:34.6889, lng:135.8398,
+     detail:"Ospita il Daibutsuden, uno dei più grandi edifici in legno al mondo, con il Grande Buddha in bronzo.",
+     long:"Il Daibutsuden, ricostruito nel XVIII secolo dopo diversi incendi, è tuttora uno dei più grandi edifici in legno esistenti al mondo, pur essendo più piccolo dell'originale dell'VIII secolo. All'interno, la statua in bronzo del Grande Buddha (Daibutsu) è alta oltre 15 metri ed è una delle più grandi del Giappone.",
+     info:[{k:"Ingresso",v:"A pagamento, economico"},{k:"Curiosità",v:"Un pilastro ha un foro alla base grande quanto una narice del Buddha: la tradizione dice che chi lo attraversa avrà buona fortuna"}],
+     tip:"Provate a passare (se di corporatura minuta) attraverso il foro nel pilastro: è una delle attività più amate dai bambini giapponesi in visita.",
+     official:"https://www.todaiji.or.jp/english/"},
+    {time:"16:30", icon:"🏯", cat:"Alloggio", title:"Check-in Osaka & Castello di Osaka", kanji:"大阪城公園", lat:34.6873, lng:135.5262,
+     detail:"Check-in al KOKO HOTEL Osaka Umeda; i bagagli spediti al mattino dovrebbero già essere arrivati. Visita al celebre castello ricostruito nel '900.",
+     long:"Il Castello di Osaka, costruito originariamente nel 1583 da Toyotomi Hideyoshi, è stato distrutto e ricostruito più volte; l'edificio attuale, in cemento armato con ascensore interno, risale al 1931 ed ospita un museo sulla storia del castello e del suo fondatore, circondato da un ampio parco e fossati storici.",
+     info:[{k:"Check-in hotel",v:"15:00 – 24:00"},{k:"Ingresso castello",v:"A pagamento per il museo interno, parco gratuito"},{k:"Durata consigliata",v:"1 – 1,5 ore"}],
+     tip:"Anche senza entrare nel museo, il parco che circonda il castello è già molto scenografico, soprattutto al tramonto.",
+     official:"https://www.osakacastle.net/english/"},
+    {time:"18:30", icon:"🌆", cat:"Panorama", title:"Umeda Sky Building", kanji:"梅田スカイビル", lat:34.7053, lng:135.4903,
+     detail:"Osservatorio panoramico a cielo aperto tra le due torri collegate, la 'Floating Garden Observatory'.",
+     long:"Progettato dall'architetto Hiroshi Hara, l'Umeda Sky Building è formato da due torri gemelle di 40 piani collegate in cima da un anello panoramico, il 'Floating Garden Observatory', raggiungibile con scale mobili a vista sospese tra le due torri: una delle esperienze architettoniche più particolari di Osaka.",
+     info:[{k:"Ingresso",v:"A pagamento"},{k:"Momento migliore",v:"Tramonto, per vedere sia il giorno che le luci notturne"}],
+     tip:"Restate fino a dopo il tramonto: la vista cambia completamente quando si accendono le luci della città.",
+     official:"https://www.kuchu-teien.com/en/"},
+    {time:"20:00", icon:"🐙", cat:"Cibo", title:"Dōtonbori: takoyaki e okonomiyaki", kanji:"道頓堀", lat:34.6687, lng:135.5031,
+     detail:"Il quartiere più vivace di Osaka lungo un canale illuminato da neon, regno dello street food locale.",
+     long:"Dōtonbori nasce come quartiere dei teatri nel XVII secolo e oggi è famoso per le enormi insegne tridimensionali (il celebre cartellone Glico Running Man su tutti) e per lo street food: il takoyaki (polpette di polpo) e l'okonomiyaki (una sorta di frittata/pancake salato) sono le specialità di Osaka per eccellenza.",
+     info:[{k:"Prezzo medio",v:"800 – 2.000 ¥ per lo street food"},{k:"Foto iconica",v:"Cartellone Glico sul ponte Ebisubashi"}],
+     tip:"Provate il takoyaki appena fatto da una bancarella storica: è molto più buono bollente, quindi attenzione a non scottarvi al primo morso."}
+  ]
+},
+{
+  date:"2026-11-21", dow:"Sab", num:"21", city:"Osaka", title:"Osaka Pittoresca",
+  note:"",
+  stops:[
+    {time:"09:30", icon:"🗼", cat:"Quartiere", title:"Shinsekai & Torre Tsūtenkaku", kanji:"新世界 / 通天閣", lat:34.6524, lng:135.5063,
+     detail:"Quartiere dall'atmosfera retrò anni '50, celebre per lo street food a base di kushikatsu.",
+     long:"Costruito agli inizi del '900 ispirandosi a Parigi e New York, Shinsekai conserva ancora oggi un fascino un po' démodé, con insegne vintage e la torre Tsūtenkaku al centro. È la patria del kushikatsu, spiedini impanati e fritti da intingere in una salsa comune (regola non scritta: mai intingere due volte).",
+     info:[{k:"Ingresso torre",v:"A pagamento per l'osservatorio"},{k:"Kushikatsu",v:"Da provare nei locali storici della zona"}],
+     tip:"Attenzione alla regola del 'no double dipping' nella salsa comune del kushikatsu: è presa molto sul serio dai locali.",
+     official:"https://www.tsutenkaku.co.jp/en/"},
+    {time:"11:00", icon:"⛩️", cat:"Tempio", title:"Santuario Namba Yasaka", kanji:"難波八阪神社", lat:34.6614, lng:135.4999,
+     detail:"Piccolo santuario con un palco votivo a forma di enorme testa di leone, usato per riti propiziatori.",
+     long:"Il palco Ema-den, a forma di testa di leone alta 12 metri con la bocca spalancata, è pensato per 'divorare' la sfortuna e le energie negative; è uno dei santuari più fotografati di Osaka nonostante le dimensioni contenute del complesso.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Durata consigliata",v:"20 – 30 min"}],
+     tip:"È un santuario piccolo: perfetto da abbinare a una passeggiata verso Shinsaibashi, non richiede una visita a sé."},
+    {time:"14:00", icon:"🛍️", cat:"Shopping", title:"Shinsaibashi", kanji:"心斎橋筋商店街", lat:34.6730, lng:135.5013,
+     detail:"Shopping nelle gallerie coperte del centro di Osaka.",
+     long:"La galleria coperta di Shinsaibashi-suji si estende per circa 600 metri ed è una delle vie commerciali più antiche di Osaka, con un mix di grandi catene, boutique di moda e negozi storici.",
+     info:[{k:"Ingresso",v:"Libero"},{k:"Durata consigliata",v:"1 – 1,5 ore"}],
+     tip:"È collegata direttamente a Dōtonbori: comoda da abbinare a un pranzo veloce nella stessa zona."},
+    {time:"15:30", icon:"🌆", cat:"Panorama", title:"Abeno Harukas", kanji:"あべのハルカス", lat:34.6459, lng:135.5133,
+     detail:"Osservatorio panoramico su uno degli edifici più alti del Giappone.",
+     long:"Con i suoi 300 metri, Abeno Harukas è stato per anni l'edificio più alto del Giappone. L'osservatorio 'Harukas 300' occupa gli ultimi piani e offre una vista a 360° sull'intera area urbana di Osaka, fino alle montagne circostanti nelle giornate limpide.",
+     info:[{k:"Ingresso",v:"A pagamento"},{k:"Durata consigliata",v:"45 min – 1 ora"}],
+     tip:"Al piano dell'osservatorio c'è anche un piccolo tratto di terrazza scoperta: se non soffrite di vertigini, vale la pena uscire anche lì.",
+     official:"https://www.abenoharukas-300.jp/en/"},
+    {time:"19:30", icon:"🎨", cat:"Quartiere", title:"Amerikamura & Dōtonbori by night", kanji:"アメリカ村", lat:34.6725, lng:135.4977,
+     detail:"Cena nel quartiere giovanile di Amerikamura o passeggiata lungo i canali illuminati di Dōtonbori.",
+     long:"Amerikamura ('villaggio americano') è nato negli anni '70 come zona di negozi di importazione di moda e dischi americani, ed è oggi il quartiere di riferimento per streetwear, vintage e street art di Osaka, molto vivace la sera.",
+     info:[{k:"Ingresso",v:"Libero"},{k:"Atmosfera",v:"Giovanile, street art, negozi vintage"}],
+     tip:"Il Triangle Park al centro di Amerikamura è un buon punto di ritrovo e osservazione della vita notturna locale."}
+  ]
+},
+{
+  date:"2026-11-22", dow:"Dom", num:"22", city:"Tokyo · Akasaka", title:"Rientro a Tokyo (Akasaka)",
+  note:"🚄 Shin-Osaka → Tokyo (~2h30). Check-in <b>Henn na Hotel Akasaka</b> (robot alla reception!).",
+  stops:[
+    {time:"09:30", icon:"🚄", cat:"Trasporto", title:"Shinkansen per Tokyo", kanji:"新大阪駅 (Shinkansen)", lat:34.7338, lng:135.5000,
+     detail:"Check-out dal KOKO HOTEL Osaka Umeda entro le 11:00 e viaggio in Shinkansen da Shin-Osaka a Tokyo.",
+     long:"Il tratto Shin-Osaka–Tokyo, di circa 2 ore e 30 minuti con il treno Nozomi (il più veloce), è lo stesso storico percorso della prima linea Shinkansen del 1964, oggi tra le tratte ferroviarie più trafficate al mondo.",
+     info:[{k:"Durata",v:"~2h30"},{k:"Treno consigliato",v:"Nozomi (il più rapido)"}],
+     tip:"Anche in questo tratto, sedersi lato destro uscendo da Osaka regala un'altra possibile vista sul Monte Fuji nelle giornate limpide.",
+     official:"https://global.jr-central.co.jp/en/"},
+    {time:"14:30", icon:"⛩️", cat:"Tempio", title:"Santuario Hie Jinja (Akasaka)", kanji:"日枝神社", lat:35.6740, lng:139.7377,
+     detail:"Santuario noto per il tunnel di torii rossi lungo la scalinata e per le scimmie, messaggere divine nella tradizione locale.",
+     long:"Fondato secoli fa come santuario protettore del castello di Edo, Hie Jinja è oggi incastonato tra i grattacieli del distretto di Akasaka. La lunga scalinata di torii rossi che sale al santuario ricorda in scala minore quella di Fushimi Inari, con il vantaggio di essere molto meno affollata.",
+     info:[{k:"Ingresso",v:"Gratuito"},{k:"Durata consigliata",v:"30 – 45 min"}],
+     tip:"È un buon santuario 'di quartiere' da visitare con calma, senza la folla dei siti più famosi.",
+     official:"https://www.hiejinja.net/"},
+    {time:"16:00", icon:"🎄", cat:"Quartiere", title:"Tokyo Midtown & Roppongi Hills", kanji:"東京ミッドタウン / 六本木ヒルズ", lat:35.6656, lng:139.7301,
+     detail:"Complessi moderni con shopping, arte e spazi verdi; a fine novembre iniziano le prime illuminazioni natalizie.",
+     long:"Entrambi i complessi, sviluppati negli anni 2000, uniscono uffici, hotel, gallerie d'arte, ristoranti e ampi spazi verdi pubblici. A fine novembre iniziano tradizionalmente le illuminazioni natalizie (illumination), tra le più scenografiche di Tokyo.",
+     info:[{k:"Ingresso spazi pubblici",v:"Gratuito"},{k:"Illuminazioni",v:"Iniziano generalmente a fine novembre"}],
+     tip:"Le illuminazioni si accendono al calare del sole: pianificate questa tappa per la fine del pomeriggio.",
+     official:"https://www.tokyo-midtown.com/en/"},
+    {time:"19:30", icon:"🍜", cat:"Cibo", title:"Cena ad Akasaka o Roppongi", kanji:"赤坂", lat:35.6740, lng:139.7377,
+     detail:"Cena nel quartiere di rientro.",
+     long:"Akasaka, storicamente un distretto politico e degli affari, offre un'ampia scelta di ristoranti di buon livello, spesso meno turistici rispetto ad altre zone di Tokyo.",
+     info:[{k:"Prezzo medio",v:"2.000 – 5.000 ¥"}],
+     tip:"Molti ristoranti della zona sono frequentati da uffici del vicino distretto governativo: buon segno di qualità e prezzi onesti."}
+  ]
+},
+{
+  date:"2026-11-23", dow:"Lun", num:"23", city:"Tokyo", title:"Shopping Finale & Volo di Rientro",
+  note:"✈️ Volo LH4923 in partenza da Haneda alle 23:30 JST.",
+  stops:[
+    {time:"10:00", icon:"🎒", cat:"Logistica", title:"Check-out & deposito bagagli", kanji:"変なホテル東京 赤坂", lat:35.6740, lng:139.7377,
+     detail:"Check-out dall'Henn na Hotel Tokyo Akasaka entro le 11:00, lasciando i bagagli in deposito in hotel.",
+     long:"L'Henn na Hotel è noto per la reception gestita in parte da robot, una delle catene alberghiere giapponesi pioniere nell'automazione dei servizi. Lasciare i bagagli in deposito qui permette di godersi l'ultima giornata di shopping senza pesi fino a sera.",
+     info:[{k:"Check-out",v:"Entro le 11:00"},{k:"Deposito bagagli",v:"Disponibile in hotel"}],
+     tip:"Approfittate della reception robotizzata per qualche foto ricordo prima di lasciare l'hotel."},
+    {time:"11:00", icon:"🛍️", cat:"Shopping", title:"Ginza", kanji:"ユニクロ 銀座店 / 銀座", lat:35.6717, lng:139.7650,
+     detail:"Grandi magazzini, cosmetici e lo store Uniqlo a 12 piani.",
+     long:"Il flagship store Uniqlo di Ginza, distribuito su 12 piani, è uno dei più grandi al mondo del marchio ed è un buon punto per acquisti di abbigliamento pratico ed economico prima del rientro, oltre ai grandi magazzini storici della zona per cosmetici e regali.",
+     info:[{k:"Orario tipico negozi",v:"10:00 – 20:00/21:00"}],
+     tip:"Se cercate regali 'sicuri' e di qualità, i piani food (depachika) dei grandi magazzini di Ginza offrono dolciumi confezionati perfetti da portare a casa."},
+    {time:"14:00", icon:"🎁", cat:"Shopping", title:"Tokyo Station — Character Street", kanji:"東京駅一番街 キャラクターストリート", lat:35.6812, lng:139.7671,
+     detail:"Galleria dedicata ai personaggi più amati: Ghibli, Pokémon e prodotti tipici, ideale per gli ultimi souvenir.",
+     long:"Questa galleria sotterranea all'interno della stazione di Tokyo raccoglie negozi ufficiali dedicati a Ghibli, Pokémon, Hello Kitty e molti altri franchise, oltre a un'intera via dedicata ai souvenir gastronomici regionali (Okashi Land e Ramen Street nelle vicinanze).",
+     info:[{k:"Ingresso",v:"Libero, accesso dalla stazione"},{k:"Comodità",v:"Perfetta per acquisti last-minute prima del treno per l'aeroporto"}],
+     tip:"Anche senza fare shopping, la vicina Ramen Street è un'ottima opzione per un ultimo pranzo giapponese veloce."},
+    {time:"16:00", icon:"🛍️", cat:"Shopping", title:"Shibuya / Harajuku", kanji:"渋谷 / 原宿", lat:35.6595, lng:139.7005,
+     detail:"Ultimo giro tra abbigliamento e gadget di tendenza.",
+     long:"Un ultimo passaggio per lo shopping di tendenza prima del rientro, tra i grandi magazzini di Shibuya e le boutique più giovani di Harajuku, già visitate nei giorni precedenti ma sempre ricche di novità.",
+     info:[{k:"Ingresso",v:"Libero"}],
+     tip:"Tenete d'occhio l'orario: da qui il trasferimento verso Haneda richiede di essere pianificato con margine per il volo notturno."},
+    {time:"20:00", icon:"✈️", cat:"Trasporto", title:"Trasferimento a Haneda & volo di ritorno", kanji:"羽田空港 第3ターミナル", lat:35.5494, lng:139.7798,
+     detail:"Ritiro bagagli e trasferimento all'aeroporto di Haneda (~30-40 min da Akasaka). Decollo alle 23:30 JST con volo LH4923.",
+     long:"Il volo di ritorno LH4923 riparte da Haneda alle 23:30, con scalo a Monaco di Baviera e coincidenza per Milano Malpensa. È consigliabile arrivare in aeroporto con ampio anticipo per il check-in e i controlli di sicurezza sui voli notturni intercontinentali.",
+     info:[{k:"Volo",v:"LH4923"},{k:"Partenza",v:"23:30 JST da Haneda"},{k:"Scalo",v:"Monaco di Baviera, arrivo 06:25 (24 nov)"}],
+     tip:"Cambiate gli eventuali yen contanti rimasti già in centro città: i tassi in aeroporto sono spesso meno favorevoli.",
+     official:"https://tokyo-haneda.com/en/"}
+  ]
+},
+{
+  date:"2026-11-24", dow:"Mar", num:"24", city:"Italia", title:"Arrivo in Italia",
+  note:"",
+  stops:[
+    {time:"09:10", icon:"🛬", cat:"Arrivo", title:"Atterraggio a Milano Malpensa", kanji:"ミラノ・マルペンサ空港", lat:45.6306, lng:8.7281,
+     detail:"Arrivo a Monaco di Baviera alle 06:25 e coincidenza per Milano Malpensa, con arrivo previsto alle ore 09:10. Fine del viaggio.",
+     long:"Dopo la coincidenza da Monaco di Baviera, l'atterraggio a Malpensa alle 09:10 chiude un viaggio di due settimane attraverso cinque tappe e la stagione del Momiji: un buon momento per riguardare le foto del tunnel di ginkgo dorato e degli aceri di Kyoto prima ancora di uscire dall'aeroporto.",
+     info:[{k:"Volo",v:"LH4923"},{k:"Arrivo",v:"09:10 a Milano Malpensa (MXP)"}],
+     tip:"Conservate i biglietti d'ingresso e le ricevute delle esperienze speciali (Ghibli, teamLab, ryokan): sono spesso bei ricordi da tenere."}
+  ]
+}
+];
+
+/* ============================= STATO & RENDER ============================= */
+let current = 1;
+let map, markersLayer;
+
+function initMap(){
+  const mapEl = document.getElementById('map');
+  if (typeof L === 'undefined') {
+    mapEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;font-size:13px;color:#8a8064;">🗾 Mappa in caricamento o offline.<br>Usa i pulsanti delle tappe per aprire direttamente Google Maps.</div>';
+    return;
+  }
+  try {
+    map = L.map('map', {zoomControl:false, attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      crossOrigin: true
+    }).addTo(map);
+    markersLayer = L.layerGroup().addTo(map);
+  } catch(e) {
+    console.warn('Errore mappa:', e);
+  }
+}
+
+function pinIcon(label){
+  return L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin"><span>${label}</span></div>`,
+    iconSize:[26,26],
+    iconAnchor:[13,26]
+  });
+}
+
+function renderDayStrip(){
+  const strip = document.getElementById('dayStrip');
+  strip.innerHTML = DAYS.map((d,i)=>`
+    <div class="day-chip ${i===current?'active':''}" data-i="${i}">
+      <span class="dow">${d.dow}</span>
+      <span class="num">${d.num}</span>
+    </div>`).join('');
+  strip.querySelectorAll('.day-chip').forEach(el=>{
+    el.addEventListener('click', ()=>{ current = parseInt(el.dataset.i); render(); });
+  });
+}
+
+function renderDayCard(){
+  const d = DAYS[current];
+  document.getElementById('dayCard').innerHTML = `
+    <p class="city">${d.city}</p>
+    <h2>${d.title}</h2>
+    ${d.note ? `<p class="note">${d.note}</p>` : ''}
+  `;
+}
+
+function renderMap(){
+  if (typeof L === 'undefined' || !map) return;
+  try {
+    markersLayer.clearLayers();
+    const d = DAYS[current];
+    const latlngs = [];
+    d.stops.forEach((s,i)=>{
+      const m = L.marker([s.lat,s.lng], {icon:pinIcon(i+1)}).addTo(markersLayer);
+      m.bindPopup(`<b>${s.title}</b>`);
+      latlngs.push([s.lat,s.lng]);
+    });
+    if(latlngs.length>1){
+      L.polyline(latlngs, {color:'#b5432f', weight:2, dashArray:'5,7', opacity:0.7}).addTo(markersLayer);
+    }
+    const bounds = L.latLngBounds(latlngs);
+    setTimeout(()=>{
+      try {
+        map.invalidateSize();
+        if(latlngs.length===1){ map.setView(latlngs[0], 13); }
+        else if(latlngs.length>1) { map.fitBounds(bounds, {padding:[28,28]}); }
+      } catch(err){}
+    }, 150);
+  } catch(e){
+    console.warn('Errore render mappa:', e);
+  }
+}
+
+function renderTimeline(){
+  const d = DAYS[current];
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = d.stops.map((s,i)=>`
+    <div class="stop">
+      <div class="stop-rail">
+        <div class="stop-dot">${s.icon}</div>
+        ${i < d.stops.length-1 ? '<div class="stop-line"></div>' : ''}
+      </div>
+      <div class="stop-body" data-i="${i}">
+        <div class="stop-time">${s.time}</div>
+        <div class="stop-title">${s.title} <span class="chevron">▾</span></div>
+        <div class="stop-detail"><div class="stop-detail-inner">
+          ${s.detail}
+          ${s.note ? `<div class="stop-note">${s.note}</div>` : ''}
+          <div class="stop-actions">
+            <button class="btn-detail" data-i="${i}">📖 Scopri di più</button>
+            <button class="btn-kanji" data-kanji="${s.kanji || s.title}" data-romaji="${s.title}">🈁 Nome Kanji</button>
+            <a class="btn-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Maps</a>
+            ${s.official ? `<a class="btn-official" target="_blank" rel="noopener" href="${s.official}">🔗 Sito</a>` : ''}
+          </div>
+        </div></div>
+      </div>
+    </div>
+  `).join('');
+
+  tl.querySelectorAll('.stop-body').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(e.target.closest('.btn-map') || e.target.closest('.btn-detail') || e.target.closest('.btn-kanji') || e.target.closest('.btn-official')) return;
+      el.classList.toggle('open');
+    });
+  });
+  tl.querySelectorAll('.btn-detail').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      openDetail(parseInt(el.dataset.i));
+    });
+  });
+  tl.querySelectorAll('.btn-kanji').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      openKanji(el.dataset.kanji, el.dataset.romaji);
+    });
+  });
+}
+
+function openDetail(stopIndex){
+  const d = DAYS[current];
+  const s = d.stops[stopIndex];
+  document.getElementById('dIcon').textContent = s.icon;
+  document.getElementById('dEyebrow').textContent = `${s.cat || 'Tappa'} · ${d.city}`;
+  document.getElementById('dTitle').textContent = s.title;
+  document.getElementById('dTime').textContent = `${d.dow} ${d.num} novembre · ore ${s.time}`;
+
+  const infoHtml = (s.info || []).map(item => `
+    <div class="info-card"><p class="k">${item.k}</p><p class="v">${item.v}</p></div>
+  `).join('');
+
+  document.getElementById('dBody').innerHTML = `
+    <h3>Perché visitarla</h3>
+    <p>${s.long || s.detail}</p>
+
+    ${infoHtml ? `<h3>Da sapere</h3><div class="info-grid">${infoHtml}</div>` : ''}
+
+    ${s.tip ? `<div class="detail-tip">💡 ${s.tip}</div>` : ''}
+
+    <div class="detail-actions">
+      <button class="btn-kanji-act" id="detailKanjiBtn">🈁 Mostra Nome in Kanji / Japanese</button>
+      <a class="btn-map-act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Apri in Google Maps</a>
+    </div>
+
+    <p class="detail-footer-note">Orari, prezzi e prenotazioni sono indicativi e possono cambiare: verificate sempre sul sito ufficiale dell'attrazione prima della visita.</p>
+  `;
+
+  document.getElementById('detailKanjiBtn').addEventListener('click', ()=>{
+    openKanji(s.kanji || s.title, s.title);
+  });
+
+  document.getElementById('detailPage').classList.add('open');
+  document.getElementById('detailPage').scrollTop = 0;
+}
+
+function closeDetail(){
+  document.getElementById('detailPage').classList.remove('open');
+}
+document.getElementById('detailClose').addEventListener('click', closeDetail);
+
+/* ================= KANJI MODAL LOGIC ================= */
+function openKanji(kanjiText, romajiText){
+  document.getElementById('kanjiText').textContent = kanjiText;
+  document.getElementById('kanjiRomaji').textContent = romajiText;
+  document.getElementById('kanjiModal').classList.add('open');
+}
+function closeKanji(){
+  document.getElementById('kanjiModal').classList.remove('open');
+}
+document.getElementById('kanjiCloseBtn').addEventListener('click', closeKanji);
+
+/* ================= CALCULATOR LOGIC ================= */
+const calcModal = document.getElementById('calcModal');
+const rateInput = document.getElementById('exchangeRate');
+const jpyInput = document.getElementById('inputJpy');
+const eurInput = document.getElementById('inputEur');
+
+function openCalc(){ calcModal.classList.add('open'); }
+function closeCalc(){ calcModal.classList.remove('open'); }
+document.getElementById('openCalcBtn').addEventListener('click', openCalc);
+document.getElementById('calcCloseBtn').addEventListener('click', closeCalc);
+
+function convertJpy(){
+  const rate = parseFloat(rateInput.value) || 165;
+  const jpy = parseFloat(jpyInput.value);
+  if(!isNaN(jpy)){
+    eurInput.value = (jpy / rate).toFixed(2);
+  } else {
+    eurInput.value = '';
+  }
+}
+
+function convertEur(){
+  const rate = parseFloat(rateInput.value) || 165;
+  const eur = parseFloat(eurInput.value);
+  if(!isNaN(eur)){
+    jpyInput.value = Math.round(eur * rate);
+  } else {
+    jpyInput.value = '';
+  }
+}
+
+jpyInput.addEventListener('input', convertJpy);
+eurInput.addEventListener('input', convertEur);
+rateInput.addEventListener('input', ()=>{
+  if(jpyInput.value) convertJpy();
+  else if(eurInput.value) convertEur();
+});
+
+document.querySelectorAll('.quick-jpy button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    jpyInput.value = btn.dataset.v;
+    convertJpy();
+  });
+});
+
+/* ================= FLIGHTS MODAL LOGIC ================= */
+const flightsModal = document.getElementById('flightsModal');
+function openFlights(){ flightsModal.classList.add('open'); }
+function closeFlights(){ flightsModal.classList.remove('open'); }
+document.getElementById('openFlightsBtn').addEventListener('click', openFlights);
+document.getElementById('flightsCloseBtn').addEventListener('click', closeFlights);
+
+/* ================= NAV & RENDER ================= */
+function renderNav(){
+  document.getElementById('dayCounter').textContent = `${current+1} / ${DAYS.length}`;
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').disabled = current===DAYS.length-1;
+}
+
+function render(){
+  renderDayStrip();
+  renderDayCard();
+  renderTimeline();
+  renderNav();
+  renderMap();
+  document.querySelector(`.day-chip[data-i="${current}"]`)?.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=>{ if(current>0){current--; render();} });
+document.getElementById('nextBtn').addEventListener('click', ()=>{ if(current<DAYS.length-1){current++; render();} });
+
+window.addEventListener('load', ()=>{
+  try { initMap(); } catch(e){}
+  render();
+});
+</script>
+</body>
+</html>
