@@ -43,6 +43,11 @@
       overscroll-behavior-y: contain;
     }
 
+    /* Aggiunge spazio extra in fondo alla pagina per evitare che l'ultima attività venga coperta */
+    body {
+      padding-bottom: 90px;
+    }
+
     .app {
       max-width: 480px;
       margin: 0 auto;
@@ -907,6 +912,62 @@
       color: #6b5a24;
       text-align: center;
     }
+
+    /* ---------- STICKY TIME BAR (WIDGET ORE) ---------- */
+    .time-sticky-bar {
+      position: fixed;
+      bottom: 15px;
+      /* Si posiziona appena sopra la barra di navigazione inferiore */
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 448px;
+      background: rgba(35, 43, 61, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(246, 241, 230, 0.2);
+      border-radius: 14px;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      color: var(--paper);
+    }
+
+    .time-clock-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .time-clock-item .flag {
+      font-size: 15px;
+    }
+
+    .time-clock-item .city-name {
+      color: #cdd3e0;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .time-clock-item .time-val {
+      font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: #ffe17d;
+      margin-left: 2px;
+    }
+
+    .time-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(246, 241, 230, 0.2);
+    }
   </style>
 </head>
 
@@ -1139,6 +1200,21 @@
           <li>Compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
         </ul>
       </div>
+    </div>
+  </div>
+
+  <!-- WIDGET OROGRAFICO / ORA ITALIA - GIAPPONE -->
+  <div class="time-sticky-bar">
+    <div class="time-clock-item">
+      <span class="flag">🇮🇹</span>
+      <span class="city-name">Italia</span>
+      <span id="timeIt" class="time-val">--:--:--</span>
+    </div>
+    <div class="time-divider"></div>
+    <div class="time-clock-item">
+      <span class="flag">🇯🇵</span>
+      <span class="city-name">Giappone</span>
+      <span id="timeJp" class="time-val">--:--:--</span>
     </div>
   </div>
 
@@ -1933,6 +2009,27 @@
       try { initMap(); } catch (e) { }
       render();
     });
+
+    /* ============================= WIDGET ORA ITALIA / GIAPPONE ============================= */
+    function updateClocks() {
+      const now = new Date();
+
+      // Ora in Italia (Europe/Rome gestisce automaticamente anche l'ora solare/legale)
+      const timeItStr = now.toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      // Ora in Giappone (Asia/Tokyo è fissa a UTC+9)
+      const timeJpStr = now.toLocaleTimeString('it-IT', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      const elIt = document.getElementById('timeIt');
+      const elJp = document.getElementById('timeJp');
+
+      if (elIt) elIt.textContent = timeItStr;
+      if (elJp) elJp.textContent = timeJpStr;
+    }
+
+    // Avvia subito e aggiorna ogni secondo
+    setInterval(updateClocks, 1000);
+    updateClocks();
   </script>
 </body>
 
