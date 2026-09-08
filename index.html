@@ -817,99 +817,104 @@
 </div>
 
 <!-- MODALE DETTAGLIO VOLI -->
-<div class="calc-modal" id="flightsModal">
-  <div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
-    <button class="calc-close" id="flightsCloseBtn">✕</button>
-    <h3 class="calc-title">✈️ Voli & Operativi</h3>
-    <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air Dolomiti</b></p>
+<div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
+  <button class="calc-close" id="flightsCloseBtn">✕</button>
+  <h3 class="calc-title">✈️ Voli & Operativi</h3>
+  <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air Dolomiti</b></p>
 
-    <!-- ANDATA -->
-    <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
-    
-    <div class="flight-card">
-      <div class="flight-header-row">
-        <b>Tratta 1: Milano → Monaco</b>
-        <span class="flight-badge">EN / LH</span>
-      </div>
-      <div class="flight-route">
-        <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
-        <div class="flight-arrow">➔</div>
-        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
-      </div>
-      <div class="flight-times">
-        <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
-        <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
-      </div>
+  <!-- ANDATA -->
+  <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
+  
+  <div class="flight-card">
+    <div class="flight-header-row">
+      <b>Tratta 1: Milano → Monaco</b>
+      <span class="flight-badge">EN / LH</span>
     </div>
-
-    <div class="layover-box">
-      ⏱️ <b>Scalo a Monaco (MUC):</b> 3 ore e 05 minuti
+    <div class="flight-route">
+      <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
+      <div class="flight-arrow">➔</div>
+      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
     </div>
-
-    <div class="flight-card">
-      <div class="flight-header-row">
-        <b>Tratta 2: Monaco → Tokyo Haneda</b>
-        <span class="flight-badge">Lufthansa LH714</span>
-      </div>
-      <div class="flight-route">
-        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
-        <div class="flight-arrow">➔</div>
-        <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
-      </div>
-      <div class="flight-times">
-        <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
-        <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
-        <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
-      </div>
+    <div class="flight-times">
+      <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
+      <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
     </div>
+  </div>
 
-    <!-- RITORNO -->
-    <div class="flight-section-title">🛬 VOLO DI RITORNO — Lunedì 23 Nov 2026</div>
+  <div class="layover-box">
+    ⏱️ <b>Scalo a Monaco (MUC):</b> 3 ore e 05 minuti
+  </div>
 
-    <div class="flight-card">
-      <div class="flight-header-row">
-        <b>Tratta 1: Tokyo Haneda → Monaco</b>
-        <span class="flight-badge">LH4923 / LH715</span>
-      </div>
-      <div class="flight-route">
-        <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
-        <div class="flight-arrow">➔</div>
-        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
-      </div>
-      <div class="flight-times">
-        <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
-        <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
-      </div>
+  <div class="flight-card">
+    <div class="flight-header-row">
+      <b>Tratta 2: Monaco → Tokyo Haneda</b>
+      <span class="flight-badge">Lufthansa LH714</span>
     </div>
-
-    <div class="layover-box">
-      ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
+    <div class="flight-route">
+      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
+      <div class="flight-arrow">➔</div>
+      <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
     </div>
-
-    <div class="flight-card">
-      <div class="flight-header-row">
-        <b>Tratta 2: Monaco → Milano</b>
-        <span class="flight-badge">EN / LH</span>
-      </div>
-      <div class="flight-route">
-        <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco di Baviera T2</div></div>
-        <div class="flight-arrow">➔</div>
-        <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
-      </div>
-      <div class="flight-times">
-        <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
-        <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
-      </div>
+    <div class="flight-times">
+      <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
+      <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
+      <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
     </div>
-
-    <div style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
-      💡 <b>Info Bagagli & Check-in:</b>
-      <ul style="margin:4px 0 0; padding-left:16px;">
-        <li>Check-in online disponibile 24 ore prima del decollo.</li>
-        <li>1 bagaglio da stiva (max 23 kg) + 1 bagaglio a mano (max 8 kg).</li>
-        <li>Ricordati di compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
-      </ul>
+    <div style="margin-top:8px;">
+      <a href="https://www.flightaware.com/live/flight/LH714" target="_blank" rel="noopener" class="btn-map" style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714 Live</a>
     </div>
+  </div>
+
+  <!-- RITORNO -->
+  <div class="flight-section-title">🛬 VOLO DI RITORNO — Lunedì 23 Nov 2026</div>
+
+  <div class="flight-card">
+    <div class="flight-header-row">
+      <b>Tratta 1: Tokyo Haneda → Monaco</b>
+      <span class="flight-badge">LH715 / LH4923</span>
+    </div>
+    <div class="flight-route">
+      <div class="flight-loc"><div class="code">HND</div><div class="sub">Tokyo Haneda T3</div></div>
+      <div class="flight-arrow">➔</div>
+      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
+    </div>
+    <div class="flight-times">
+      <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
+      <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
+    </div>
+    <div style="margin-top:8px;">
+      <a href="https://www.flightaware.com/live/flight/LH715" target="_blank" rel="noopener" class="btn-map" style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715 Live</a>
+    </div>
+  </div>
+
+  <div class="layover-box">
+    ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
+  </div>
+
+  <div class="flight-card">
+    <div class="flight-header-row">
+      <b>Tratta 2: Monaco → Milano</b>
+      <span class="flight-badge">EN / LH</span>
+    </div>
+    <div class="flight-route">
+      <div class="flight-loc"><div class="code">MUC</div><div class="sub">Monaco T2</div></div>
+      <div class="flight-arrow">➔</div>
+      <div class="flight-loc"><div class="code">MXP</div><div class="sub">Milano Malpensa T1</div></div>
+    </div>
+    <div class="flight-times">
+      <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
+      <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
+    💡 <b>Info Bagagli & Check-in:</b>
+    <ul style="margin:4px 0 0; padding-left:16px;">
+      <li>Check-in online disponibile 24 ore prima del decollo.</li>
+      <li><b>Bagagli in stiva:</b> Economy Standard = 1 valigia (max 23 kg); Premium Economy = 2 valigie (max 23 kg ciascuna).</li>
+      <li><b>Bagaglio a mano:</b> 1 pezzo fino a 8 kg + 1 borsetta/zainetto personale.</li>
+      <li>Compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
+    </ul>
   </div>
 </div>
 
