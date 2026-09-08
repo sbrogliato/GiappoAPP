@@ -124,30 +124,6 @@
       background: rgba(246, 241, 230, 0.3);
     }
 
-    /* ---------- CONNEXION ALERT BANNER ---------- */
-    .conn-alert {
-      margin: 10px 16px 0;
-      padding: 10px 12px;
-      background: #fff8e6;
-      border: 1px solid #ebd494;
-      border-radius: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 12px;
-      color: #66511a;
-      line-height: 1.45;
-    }
-
-    .conn-alert b {
-      color: #8f2f20;
-    }
-
-    .conn-icon {
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
     /* ---------- DAY STRIP ---------- */
     .day-strip {
       display: flex;
@@ -984,12 +960,6 @@
       </div>
     </div>
 
-    <div class="conn-alert">
-      <span class="conn-icon">📶</span>
-      <div><b>Nota Connessione:</b> La connessione Wi-Fi o la eSIM possono avere cali di segnale nei treni, nelle
-        stazioni sotterranee o nelle zone montane.</div>
-    </div>
-
     <div class="day-strip" id="dayStrip"></div>
 
     <div class="day-card" id="dayCard"></div>
@@ -1440,7 +1410,7 @@
             detail: "Passeggiata in kimono lungo le pittoresche stradine storiche fino al tempio panoramico Kiyomizu-dera, spettacolare al tramonto.",
             long: "Kiyomizu-dera, fondato nel 778 e patrimonio UNESCO, è celebre per la sua grande terrazza in legno costruita senza un solo chiodo, sorretta da 139 pilastri. Le due stradine acciottolate che vi conducono, Ninenzaka e Sannenzaka, sono tra le meglio conservate di Kyoto: la leggenda vuole che inciampare su questi gradini porti sfortuna per anni.",
             info: [{ k: "Ingresso tempio", v: "A pagamento, economico" }, { k: "Orario", v: "Diurno, con aperture serali stagionali per il foliage" }, { k: "Durata consigliata", v: "1,5 ore incl. stradine" }],
-            tip: "In stagione del Momiji il tempio apre talvolta anche di sera con illuminazioni speciali: verificate il calendario ufficiale prima della visita.",
+            tip: "In alta stagione del Momiji il tempio apre talvolta anche di sera con illuminazioni speciali: verificate il calendario ufficiale prima della visita.",
             official: "https://www.kiyomizudera.or.jp/en/"
           },
           {
@@ -1458,7 +1428,7 @@
         stops: [
           {
             time: "08:00", icon: "⛩️", cat: "Tempio", title: "Fushimi Inari Taisha", kanji: "伏見稲荷大社", lat: 34.9671, lng: 135.7727,
-            detail: "Il sentiero dei 10.000 torii vermigli che si inerpica sul monte Inari.",
+            detail: "Il sentiero dei 10.000 torigli vermigli che si inerpica sul monte Inari.",
             long: "Fushimi Inari è il principale santuario dedicato a Inari, divinità shintoista del riso, del commercio e della prosperità. I torii che formano la celebre galleria sono stati donati nel tempo da aziende e privati come ex-voto: il percorso completo fino alla cima del monte richiede 2-3 ore, ma già i primi 20-30 minuti regalano gli scorci più fotografati.",
             info: [{ k: "Ingresso", v: "Gratuito, sempre aperto" }, { k: "Percorso completo", v: "2 – 3 ore andata/ritorno" }, { k: "Durata consigliata", v: "45 min – 1,5 ore" }],
             tip: "Superato il primo tratto affollato vicino all'ingresso, la folla diminuisce molto: vale la pena proseguire oltre i primi torii.",
@@ -1868,127 +1838,25 @@
           el.classList.toggle('open');
         });
       });
-      tl.querySelectorAll('.btn-detail').forEach(el => {
-        el.addEventListener('click', (e) => {
+
+      tl.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          openDetail(parseInt(el.dataset.i));
+          const s = d.stops[parseInt(btn.dataset.i)];
+          openDetail(s);
         });
       });
-      tl.querySelectorAll('.btn-kanji').forEach(el => {
-        el.addEventListener('click', (e) => {
+
+      tl.querySelectorAll('.btn-kanji').forEach(btn => {
+        btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          openKanji(el.dataset.kanji, el.dataset.romaji);
+          openKanji(btn.dataset.kanji, btn.dataset.romaji);
         });
       });
     }
 
-    function openDetail(stopIndex) {
-      const d = DAYS[current];
-      const s = d.stops[stopIndex];
-      document.getElementById('dIcon').textContent = s.icon;
-      document.getElementById('dEyebrow').textContent = `${s.cat || 'Tappa'} · ${d.city}`;
-      document.getElementById('dTitle').textContent = s.title;
-      document.getElementById('dTime').textContent = `${d.dow} ${d.num} novembre · ore ${s.time}`;
-
-      const infoHtml = (s.info || []).map(item => `
-    <div class="info-card"><p class="k">${item.k}</p><p class="v">${item.v}</p></div>
-  `).join('');
-
-      document.getElementById('dBody').innerHTML = `
-    <h3>Perché visitarla</h3>
-    <p>${s.long || s.detail}</p>
-
-    ${infoHtml ? `<h3>Da sapere</h3><div class="info-grid">${infoHtml}</div>` : ''}
-
-    ${s.tip ? `<div class="detail-tip">💡 ${s.tip}</div>` : ''}
-
-    <div class="detail-actions">
-      <button class="btn-kanji-act" id="detailKanjiBtn">🈁 Mostra Nome in Kanji / Japanese</button>
-      <a class="btn-map-act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Apri in Google Maps</a>
-    </div>
-
-    <p class="detail-footer-note">Orari, prezzi e prenotazioni sono indicativi e possono cambiare: verificate sempre sul sito ufficiale dell'attrazione prima della visita.</p>
-  `;
-
-      document.getElementById('detailKanjiBtn').addEventListener('click', () => {
-        openKanji(s.kanji || s.title, s.title);
-      });
-
-      document.getElementById('detailPage').classList.add('open');
-      document.getElementById('detailPage').scrollTop = 0;
-    }
-
-    function closeDetail() {
-      document.getElementById('detailPage').classList.remove('open');
-    }
-    document.getElementById('detailClose').addEventListener('click', closeDetail);
-
-    /* ================= KANJI MODAL LOGIC ================= */
-    function openKanji(kanjiText, romajiText) {
-      document.getElementById('kanjiText').textContent = kanjiText;
-      document.getElementById('kanjiRomaji').textContent = romajiText;
-      document.getElementById('kanjiModal').classList.add('open');
-    }
-    function closeKanji() {
-      document.getElementById('kanjiModal').classList.remove('open');
-    }
-    document.getElementById('kanjiCloseBtn').addEventListener('click', closeKanji);
-
-    /* ================= CALCULATOR LOGIC ================= */
-    const calcModal = document.getElementById('calcModal');
-    const rateInput = document.getElementById('exchangeRate');
-    const jpyInput = document.getElementById('inputJpy');
-    const eurInput = document.getElementById('inputEur');
-
-    function openCalc() { calcModal.classList.add('open'); }
-    function closeCalc() { calcModal.classList.remove('open'); }
-    document.getElementById('openCalcBtn').addEventListener('click', openCalc);
-    document.getElementById('calcCloseBtn').addEventListener('click', closeCalc);
-
-    function convertJpy() {
-      const rate = parseFloat(rateInput.value) || 165;
-      const jpy = parseFloat(jpyInput.value);
-      if (!isNaN(jpy)) {
-        eurInput.value = (jpy / rate).toFixed(2);
-      } else {
-        eurInput.value = '';
-      }
-    }
-
-    function convertEur() {
-      const rate = parseFloat(rateInput.value) || 165;
-      const eur = parseFloat(eurInput.value);
-      if (!isNaN(eur)) {
-        jpyInput.value = Math.round(eur * rate);
-      } else {
-        jpyInput.value = '';
-      }
-    }
-
-    jpyInput.addEventListener('input', convertJpy);
-    eurInput.addEventListener('input', convertEur);
-    rateInput.addEventListener('input', () => {
-      if (jpyInput.value) convertJpy();
-      else if (eurInput.value) convertEur();
-    });
-
-    document.querySelectorAll('.quick-jpy button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        jpyInput.value = btn.dataset.v;
-        convertJpy();
-      });
-    });
-
-    /* ================= FLIGHTS MODAL LOGIC ================= */
-    const flightsModal = document.getElementById('flightsModal');
-    function openFlights() { flightsModal.classList.add('open'); }
-    function closeFlights() { flightsModal.classList.remove('open'); }
-    document.getElementById('openFlightsBtn').addEventListener('click', openFlights);
-    document.getElementById('flightsCloseBtn').addEventListener('click', closeFlights);
-
-    /* ================= NAV & RENDER ================= */
-    function renderNav() {
-      document.getElementById('dayCounter').textContent = `${current + 1} / ${DAYS.length}`;
+    function renderCounter() {
+      document.getElementById('dayCounter').innerText = `${current + 1} / ${DAYS.length}`;
       document.getElementById('prevBtn').disabled = current === 0;
       document.getElementById('nextBtn').disabled = current === DAYS.length - 1;
     }
@@ -1996,40 +1864,145 @@
     function render() {
       renderDayStrip();
       renderDayCard();
-      renderTimeline();
-      renderNav();
       renderMap();
-      document.querySelector(`.day-chip[data-i="${current}"]`)?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      renderTimeline();
+      renderCounter();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.getElementById('prevBtn').addEventListener('click', () => { if (current > 0) { current--; render(); } });
-    document.getElementById('nextBtn').addEventListener('click', () => { if (current < DAYS.length - 1) { current++; render(); } });
+    /* ============================= OVERLAY DETTAGLIO ============================= */
+    function openDetail(s) {
+      document.getElementById('dIcon').innerText = s.icon;
+      document.getElementById('dEyebrow').innerText = s.cat || 'Dettaglio tappa';
+      document.getElementById('dTitle').innerText = s.title;
+      document.getElementById('dTime').innerText = `Orario indicativo: ${s.time}`;
 
-    window.addEventListener('load', () => {
-      try { initMap(); } catch (e) { }
-      render();
-    });
+      let infoHtml = '';
+      if (s.info && s.info.length) {
+        infoHtml = `
+      <h3>Informazioni utili</h3>
+      <div class="info-grid">
+        ${s.info.map(inf => `<div class="info-card"><div class="k">${inf.k}</div><p class="v">${inf.v}</p></div>`).join('')}
+      </div>`;
+      }
+
+      let tipHtml = '';
+      if (s.tip) {
+        tipHtml = `<div class="detail-tip">💡 <b>Consiglio pratico:</b> ${s.tip}</div>`;
+      }
+
+      let actionsHtml = `
+    <div class="detail-actions">
+      <button class="btn-kanji-act" data-kanji="${s.kanji || s.title}" data-romaji="${s.title}">🈁 Mostra Nome in Giapponese (Kanji)</button>
+      <a class="btn-map-act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Apri in Google Maps</a>
+      ${s.official ? `<a class="btn-official" style="text-align:center; padding:12px; border-radius:14px; font-weight:700;" target="_blank" rel="noopener" href="${s.official}">🔗 Visita il sito ufficiale</a>` : ''}
+    </div>`;
+
+      document.getElementById('dBody').innerHTML = `
+    <h3>Descrizione approfondita</h3>
+    <p>${s.long || s.detail}</p>
+    ${infoHtml}
+    ${tipHtml}
+    ${actionsHtml}
+    <div class="detail-footer-note">Momiji Kikō · Itinerario Giappone Autunno 2026</div>
+  `;
+
+      document.getElementById('dBody').querySelectorAll('.btn-kanji-act').forEach(b => {
+        b.addEventListener('click', () => openKanji(b.dataset.kanji, b.dataset.romaji));
+      });
+
+      document.getElementById('detailPage').classList.add('open');
+    }
+
+    function closeDetail() {
+      document.getElementById('detailPage').classList.remove('open');
+    }
+
+    /* ============================= KANJI MODAL ============================= */
+    function openKanji(kanji, romaji) {
+      document.getElementById('kanjiText').innerText = kanji;
+      document.getElementById('kanjiRomaji').innerText = romaji;
+      document.getElementById('kanjiModal').classList.add('open');
+    }
+    function closeKanji() {
+      document.getElementById('kanjiModal').classList.remove('open');
+    }
+
+    /* ============================= CALCOLATORE CAMBIO ============================= */
+    function initCalc() {
+      const modal = document.getElementById('calcModal');
+      const openBtn = document.getElementById('openCalcBtn');
+      const closeBtn = document.getElementById('calcCloseBtn');
+      const rateInput = document.getElementById('exchangeRate');
+      const jpyInput = document.getElementById('inputJpy');
+      const eurInput = document.getElementById('inputEur');
+
+      openBtn.addEventListener('click', () => modal.classList.add('open'));
+      closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+
+      jpyInput.addEventListener('input', () => {
+        const r = parseFloat(rateInput.value) || 165;
+        const v = parseFloat(jpyInput.value);
+        eurInput.value = isNaN(v) ? '' : (v / r).toFixed(2);
+      });
+
+      eurInput.addEventListener('input', () => {
+        const r = parseFloat(rateInput.value) || 165;
+        const v = parseFloat(eurInput.value);
+        jpyInput.value = isNaN(v) ? '' : Math.round(v * r);
+      });
+
+      document.querySelectorAll('.quick-jpy button').forEach(b => {
+        b.addEventListener('click', () => {
+          jpyInput.value = b.dataset.v;
+          jpyInput.dispatchEvent(new Event('input'));
+        });
+      });
+    }
+
+    /* ============================= FLIGHTS MODAL ============================= */
+    function initFlights() {
+      const modal = document.getElementById('flightsModal');
+      const openBtn = document.getElementById('openFlightsBtn');
+      const closeBtn = document.getElementById('flightsCloseBtn');
+
+      openBtn.addEventListener('click', () => modal.classList.add('open'));
+      closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+    }
 
     /* ============================= WIDGET ORA ITALIA / GIAPPONE ============================= */
     function updateClocks() {
       const now = new Date();
+      // Ora Italia (CEST o CET, usiamo toLocaleString per precisione sul fuso orario di sistema o gestiamo UTC)
+      const optionsIt = { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      const optionsJp = { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
 
-      // Ora in Italia (Europe/Rome gestisce automaticamente anche l'ora solare/legale)
-      const timeItStr = now.toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      // Ora in Giappone (Asia/Tokyo è fissa a UTC+9)
-      const timeJpStr = now.toLocaleTimeString('it-IT', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      const elIt = document.getElementById('timeIt');
-      const elJp = document.getElementById('timeJp');
-
-      if (elIt) elIt.textContent = timeItStr;
-      if (elJp) elJp.textContent = timeJpStr;
+      try {
+        document.getElementById('timeIt').innerText = now.toLocaleTimeString('it-IT', optionsIt);
+        document.getElementById('timeJp').innerText = now.toLocaleTimeString('it-IT', optionsJp);
+      } catch (e) {
+        document.getElementById('timeIt').innerText = '--:--:--';
+        document.getElementById('timeJp').innerText = '--:--:--';
+      }
     }
 
-    // Avvia subito e aggiorna ogni secondo
-    setInterval(updateClocks, 1000);
-    updateClocks();
+    /* ============================= EVENTI PRINCIPALI ============================= */
+    document.getElementById('prevBtn').addEventListener('click', () => { if (current > 0) { current--; render(); } });
+    document.getElementById('nextBtn').addEventListener('click', () => { if (current < DAYS.length - 1) { current++; render(); } });
+    document.getElementById('detailClose').addEventListener('click', closeDetail);
+    document.getElementById('kanjiCloseBtn').addEventListener('click', closeKanji);
+
+    // Init al caricamento
+    window.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      render();
+      initCalc();
+      initFlights();
+      setInterval(updateClocks, 1000);
+      updateClocks();
+    });
   </script>
 </body>
 
