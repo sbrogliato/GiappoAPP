@@ -3,69 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Momiji Kikō - Itinerario Giappone</title>
+  <title>Momiji Kikō - Giappone</title>
   
-  <!-- PWA Manifest Integration -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#c0392b">
-
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     :root {
-      --primary-color: #c0392b;
-      --bg-color: #f8f9fa;
+      --primary: #c0392b;
+      --bg: #f4f6f7;
       --card-bg: #ffffff;
-      --text-color: #2c3e50;
+      --text: #2c3e50;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: var(--bg);
+      color: var(--text);
     }
 
     header {
-      background-color: var(--primary-color);
+      background: var(--primary);
       color: white;
-      padding: 1rem;
+      padding: 0.8rem 1rem;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
     }
 
     .converter-widget {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 0.5rem;
-      border-radius: 8px;
-      margin-top: 0.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
       display: flex;
-      gap: 0.5rem;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.4rem;
+      font-size: 0.85rem;
     }
 
     .converter-widget input {
-      width: 40%;
-      padding: 0.4rem;
-      border: 1px solid #ccc;
+      width: 70px;
+      padding: 0.2rem 0.4rem;
+      border: 1px solid #fff;
       border-radius: 4px;
-      font-size: 0.9rem;
+      text-align: center;
+      font-weight: bold;
     }
 
     #map {
-      height: 35vh;
+      height: 38vh;
       width: 100%;
     }
 
     .container {
-      padding: 1rem;
       max-width: 800px;
       margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .day-section {
+      margin-bottom: 2rem;
+    }
+
+    .day-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
     }
 
     .attraction-card {
@@ -73,42 +92,56 @@
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .btn {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.5rem 0.8rem;
+    .attraction-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .info-line {
+      font-size: 0.9rem;
+      margin: 0.3rem 0;
+    }
+
+    .tag {
+      background: #e8f4f8;
+      color: #2980b9;
+      padding: 0.15rem 0.4rem;
       border-radius: 4px;
-      cursor: pointer;
+      font-size: 0.8rem;
       font-weight: bold;
-      display: inline-block;
-      text-decoration: none;
-      font-size: 0.85rem;
     }
 
-    .btn-kanji {
-      background-color: #34495e;
-      margin-top: 0.5rem;
-    }
-
-    .links-group {
+    .btn-group {
       margin-top: 0.8rem;
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
 
-    /* Modal Kanji per Tassisti/Passanti */
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .btn-kanji { background: #34495e; }
+    .btn-maps { background: #27ae60; }
+
+    /* Modal Kanji */
     .kanji-modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       background: white;
       z-index: 9999;
       flex-direction: column;
@@ -119,103 +152,154 @@
       box-sizing: border-box;
     }
 
-    .kanji-modal.active {
-      display: flex;
-    }
-
-    .kanji-text-large {
-      font-size: 4rem;
-      font-weight: bold;
-      margin: 1rem 0;
-      color: #000;
-    }
-
-    .kanji-subtext {
-      font-size: 1.5rem;
-      color: #555;
-    }
-
-    .close-modal-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 1.5rem;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
+    .kanji-modal.active { display: flex; }
+    .kanji-text-large { font-size: 4.5rem; font-weight: bold; margin: 1rem 0; }
+    .kanji-subtext { font-size: 1.4rem; color: #666; }
+    .close-btn {
+      position: absolute; top: 20px; right: 20px;
+      background: #e74c3c; color: white; border: none;
+      border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1 style="margin:0; font-size: 1.3rem;">🍁 Momiji Kikō</h1>
-    
-    <!-- Widget Convertitore Istantaneo Yen / Euro -->
+    <div class="brand-title">🍁 Momiji Kikō</div>
     <div class="converter-widget">
-      <span>💱 Cambio:</span>
+      <span>💱</span>
       <input type="number" id="jpyInput" placeholder="¥ JPY" oninput="convertCurrency('JPY')">
       <span>=</span>
       <input type="number" id="eurInput" placeholder="€ EUR" oninput="convertCurrency('EUR')">
     </div>
   </header>
 
-  <!-- Mappa con Gesture Handling/Scroll disabilitato -->
   <div id="map"></div>
 
-  <div class="container">
-    <h2>Itinerario e Attrazioni</h2>
-    
-    <!-- Esempio di Scheda Attrazione -->
-    <div class="attraction-card">
-      <h3>Tempio Kiyomizu-dera</h3>
-      <p><strong>Orari:</strong> 06:00 - 18:00 | <strong>Costo:</strong> ¥500 (Gratis giardino esterno)</p>
-      <p><strong>Trasporto:</strong> Bus 206 da Kyoto Station (Coperto da IC Card / Suica)</p>
-      
-      <button class="btn btn-kanji" onclick="openKanjiModal('清水寺', 'Kiyomizu-dera')">
-        🇯🇵 Mostra Nome in Kanji/Kana
-      </button>
-
-      <div class="links-group">
-        <a href="https://www.kiyomizudera.or.jp/en/" target="_blank" rel="noopener" class="btn">Sito Ufficiale</a>
-        <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener" class="btn" style="background-color: #27ae60;">Google Maps</a>
-      </div>
-    </div>
+  <div class="container" id="itineraryContainer">
+    <!-- Le giornate e le schede verranno inserite automaticamente da JavaScript -->
   </div>
 
-  <!-- Modal per Visualizzazione Kanji a Schermo Intero -->
   <div id="kanjiModal" class="kanji-modal">
-    <button class="close-modal-btn" onclick="closeKanjiModal()">✕</button>
-    <div class="kanji-subtext" id="modalSubtext">Nome Attrazione</div>
-    <div class="kanji-text-large" id="modalKanjiText">漢字</div>
-    <p style="color: #888;">Mostra questo schermo al tassista o al passante</p>
+    <button class="close-btn" onclick="closeKanjiModal()">✕</button>
+    <div class="kanji-subtext" id="modalSubtext"></div>
+    <div class="kanji-text-large" id="modalKanjiText"></div>
+    <p style="color: #777;">Mostra questo schermo al tassista o per indicazioni</p>
   </div>
 
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <script>
-    // 1. Inizializzazione Mappa senza Scroll Intercettato
+    // --- 1. DATI DELL'ITINERARIO ---
+    // Aggiungi qui tutte le giornate e le attrazioni del tuo viaggio
+    const itinerarioData = [
+      {
+        giorno: "Giorno 1 - Tokyo (Asakusa e Ueno)",
+        attrazioni: [
+          {
+            nome: "Tempio Senso-ji",
+            kanji: "浅草寺",
+            romaji: "Sensō-ji",
+            orari: "06:00 - 17:00",
+            costo: "Gratuito",
+            trasporto: "Metro Asakusa Line / Ginza Line",
+            pass: "Suica / Pasmo",
+            lat: 35.7148,
+            lng: 139.7967,
+            sito: "https://www.senso-ji.jp/",
+            maps: "https://maps.google.com/?q=Senso-ji+Tokyo"
+          },
+          {
+            nome: "Parco di Ueno",
+            kanji: "上野恩賜公園",
+            romaji: "Ueno Onshi Kōen",
+            orari: "05:00 - 23:00",
+            costo: "Gratuito",
+            trasporto: "Stazione JR Ueno",
+            pass: "JR Pass / Suica",
+            lat: 35.7140,
+            lng: 139.7741,
+            sito: "https://www.metro.tokyo.lg.jp/",
+            maps: "https://maps.google.com/?q=Ueno+Park"
+          }
+        ]
+      },
+      {
+        giorno: "Giorno 2 - Kyoto (Higashiyama)",
+        attrazioni: [
+          {
+            nome: "Tempio Kiyomizu-dera",
+            kanji: "清水寺",
+            romaji: "Kiyomizu-dera",
+            orari: "06:00 - 18:00",
+            costo: "¥500",
+            trasporto: "Bus 206 da Kyoto Station",
+            pass: "IC Card / Bus Pass",
+            lat: 34.9949,
+            lng: 135.7850,
+            sito: "https://www.kiyomizudera.or.jp/en/",
+            maps: "https://maps.google.com/?q=Kiyomizu-dera"
+          }
+        ]
+      }
+    ];
+
+    // --- 2. INIZIALIZZAZIONE MAPPA (Scroll disabilitato) ---
     const map = L.map('map', {
-      scrollWheelZoom: false, // Disabilita lo scroll con rotellina per facilitare la navigazione della pagina
+      scrollWheelZoom: false, // Impedisce la cattura dello scroll
       tap: false
-    }).setView([35.6762, 139.6503], 11);
+    }).setView([35.6762, 139.6503], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // 2. Convertitore Valuta Istantaneo (Tasso indicativo: 1 EUR = 160 JPY)
-    const EXCHANGE_RATE = 160; 
+    const markersGroup = L.featureGroup();
 
+    // --- 3. RENDERING DINAMICO DELL'ITINERARIO ---
+    const container = document.getElementById('itineraryContainer');
+
+    itinerarioData.forEach(day => {
+      const daySection = document.createElement('div');
+      daySection.className = 'day-section';
+      
+      let html = `<div class="day-title">${day.giorno}</div>`;
+
+      day.attrazioni.forEach(attraction => {
+        // Aggiungi marker alla mappa
+        const marker = L.marker([attraction.lat, attraction.lng])
+          .bindPopup(`<b>${attraction.nome}</b><br>${attraction.romaji}`);
+        markersGroup.addLayer(marker);
+
+        // Genera la scheda HTML
+        html += `
+          <div class="attraction-card">
+            <h3>${attraction.nome}</h3>
+            <div class="info-line"><strong>Orari:</strong> ${attraction.orari} | <strong>Costo:</strong> ${attraction.costo}</div>
+            <div class="info-line"><strong>Trasporto:</strong> ${attraction.trasporto} <span class="tag">${attraction.pass}</span></div>
+            
+            <div class="btn-group">
+              <button class="btn btn-kanji" onclick="openKanjiModal('${attraction.kanji}', '${attraction.romaji}')">🇯🇵 Nome Kanji</button>
+              <a href="${attraction.sito}" target="_blank" class="btn">Sito Ufficial</a>
+              <a href="${attraction.maps}" target="_blank" class="btn btn-maps">Google Maps</a>
+            </div>
+          </div>
+        `;
+      });
+
+      daySection.innerHTML = html;
+      container.appendChild(daySection);
+    });
+
+    markersGroup.addTo(map);
+    if (markersGroup.getLayers().length > 0) {
+      map.fitBounds(markersGroup.getBounds().pad(0.1));
+    }
+
+    // --- 4. CONVERTITORE VALUTA ---
+    const EXCHANGE_RATE = 160; 
     function convertCurrency(source) {
       const jpyInput = document.getElementById('jpyInput');
       const eurInput = document.getElementById('eurInput');
-
       if (source === 'JPY') {
         const jpy = parseFloat(jpyInput.value);
         eurInput.value = isNaN(jpy) ? '' : (jpy / EXCHANGE_RATE).toFixed(2);
@@ -225,35 +309,23 @@
       }
     }
 
-    // 3. Gestione Modal Kanji per Tassisti
+    // --- 5. MODAL KANJI ---
     function openKanjiModal(kanji, romaji) {
       document.getElementById('modalKanjiText').innerText = kanji;
       document.getElementById('modalSubtext').innerText = romaji;
       document.getElementById('kanjiModal').classList.add('active');
     }
-
     function closeKanjiModal() {
       document.getElementById('kanjiModal').classList.remove('active');
     }
 
-    // 4. Funzionamento Offline (Service Worker & LocalStorage)
+    // --- 6. SERVICE WORKER FIX PER GITHUB PAGES ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // Registrazione Service Worker di base per il caching offline
-        navigator.serviceWorker.register('/sw.js').catch(err => {
-          console.log('Service Worker non registrato (richiede HTTPS o localhost):', err);
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.log('SW registration fallback:', err);
         });
       });
-    }
-
-    // Salva automaticamente lo stato o le note dell'utente in LocalStorage
-    function saveToLocalStorage(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-
-    function getFromLocalStorage(key) {
-      const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : null;
     }
   </script>
 </body>
