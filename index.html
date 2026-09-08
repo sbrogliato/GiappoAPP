@@ -124,6 +124,30 @@
       background: rgba(246, 241, 230, 0.3);
     }
 
+    /* ---------- CONNEXION ALERT BANNER ---------- */
+    .conn-alert {
+      margin: 10px 16px 0;
+      padding: 10px 12px;
+      background: #fff8e6;
+      border: 1px solid #ebd494;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: #66511a;
+      line-height: 1.45;
+    }
+
+    .conn-alert b {
+      color: #8f2f20;
+    }
+
+    .conn-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
     /* ---------- DAY STRIP ---------- */
     .day-strip {
       display: flex;
@@ -960,6 +984,12 @@
       </div>
     </div>
 
+    <!-- <div class="conn-alert">
+      <span class="conn-icon">📶</span>
+      <div><b>Nota Connessione:</b> La connessione Wi-Fi o la eSIM possono avere cali di segnale nei treni, nelle
+        stazioni sotterranee o nelle zone montane.</div>
+    </div> -->
+
     <div class="day-strip" id="dayStrip"></div>
 
     <div class="day-card" id="dayCard"></div>
@@ -1215,7 +1245,7 @@
             detail: "Sbarco, controlli doganali, ritiro del Pocket Wi-Fi o attivazione eSIM e configurazione delle tessere IC (Suica/Pasmo).",
             long: "Haneda è l'aeroporto più vicino al centro di Tokyo e tra i più efficienti al mondo. Dopo l'immigrazione e il ritiro bagagli, ci sono banchi dedicati per il noleggio Pocket Wi-Fi (prenotato in anticipo) e macchinette per le tessere IC Suica/Pasmo, che si usano su ogni treno, bus e in molti negozi di tutto il Giappone.",
             info: [{ k: "Connessione a Tokyo", v: "Monorotaia o Keikyu Line" }, { k: "Tessera IC", v: "Suica o Pasmo" }, { k: "Dogana", v: "Modulo digitale Visit Japan Web consigliato" }],
-            tip: "Compilate online il modulo Visit Japan Web prima della partenza: velocizes moltisssimo i controlli doganali e di immigrazione.",
+            tip: "Compilate online il modulo Visit Japan Web prima della partenza: velocizza molto i controlli doganali e di immigrazione.",
             official: "https://tokyo-haneda.com/en/"
           },
           {
@@ -1410,7 +1440,7 @@
             detail: "Passeggiata in kimono lungo le pittoresche stradine storiche fino al tempio panoramico Kiyomizu-dera, spettacolare al tramonto.",
             long: "Kiyomizu-dera, fondato nel 778 e patrimonio UNESCO, è celebre per la sua grande terrazza in legno costruita senza un solo chiodo, sorretta da 139 pilastri. Le due stradine acciottolate che vi conducono, Ninenzaka e Sannenzaka, sono tra le meglio conservate di Kyoto: la leggenda vuole che inciampare su questi gradini porti sfortuna per anni.",
             info: [{ k: "Ingresso tempio", v: "A pagamento, economico" }, { k: "Orario", v: "Diurno, con aperture serali stagionali per il foliage" }, { k: "Durata consigliata", v: "1,5 ore incl. stradine" }],
-            tip: "In alta stagione del Momiji il tempio apre talvolta anche di sera con illuminazioni speciali: verificate il calendario ufficiale prima della visita.",
+            tip: "In stagione del Momiji il tempio apre talvolta anche di sera con illuminazioni speciali: verificate il calendario ufficiale prima della visita.",
             official: "https://www.kiyomizudera.or.jp/en/"
           },
           {
@@ -1705,11 +1735,301 @@
           {
             time: "20:00", icon: "✈️", cat: "Trasporto", title: "Trasferimento a Haneda & volo di ritorno", kanji: "羽田空港 第3ターミナル", lat: 35.5494, lng: 139.7798,
             detail: "Ritiro bagagli e trasferimento all'aeroporto di Haneda (~30-40 min da Akasaka). Decollo alle 23:30 JST con volo LH4923.",
-            long: "Il volo di ritorno LH4923 riparte da Haneda alle 23:30, con scalo a Monaco di Baviera"
+            long: "Il volo di ritorno LH4923 riparte da Haneda alle 23:30, con scalo a Monaco di Baviera e coincidenza per Milano Malpensa. È consigliabile arrivare in aeroporto con ampio anticipo per il check-in e i controlli di sicurezza sui voli notturni intercontinentali.",
+            info: [{ k: "Volo", v: "LH4923" }, { k: "Partenza", v: "23:30 JST da Haneda" }, { k: "Scalo", v: "Monaco di Baviera, arrivo 06:25 (24 nov)" }],
+            tip: "Cambiate gli eventuali yen contanti rimasti già in centro città: i tassi in aeroporto sono spesso meno favorevoli.",
+            official: "https://tokyo-haneda.com/en/"
+          }
+        ]
+      },
+      {
+        date: "2026-11-24", dow: "Mar", num: "24", city: "Italia", title: "Arrivo in Italia",
+        note: "",
+        stops: [
+          {
+            time: "09:10", icon: "🛬", cat: "Arrivo", title: "Atterraggio a Milano Malpensa", kanji: "ミラノ・マルペンサ空港", lat: 45.6306, lng: 8.7281,
+            detail: "Arrivo a Monaco di Baviera alle 06:25 e coincidenza per Milano Malpensa, con arrivo previsto alle ore 09:10. Fine del viaggio.",
+            long: "Dopo la coincidenza da Monaco di Baviera, l'atterraggio a Malpensa alle 09:10 chiude un viaggio di due settimane attraverso cinque tappe e la stagione del Momiji: un buon momento per riguardare le foto del tunnel di ginkgo dorato e degli aceri di Kyoto prima ancora di uscire dall'aeroporto.",
+            info: [{ k: "Volo", v: "LH4923" }, { k: "Arrivo", v: "09:10 a Milano Malpensa (MXP)" }],
+            tip: "Conservate i biglietti d'ingresso e le ricevute delle esperienze speciali (Ghibli, teamLab, ryokan): sono spesso bei ricordi da tenere."
           }
         ]
       }
     ];
+
+    /* ============================= STATO & RENDER ============================= */
+    let current = 1;
+    let map, markersLayer;
+
+    function initMap() {
+      const mapEl = document.getElementById('map');
+      if (typeof L === 'undefined') {
+        mapEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;font-size:13px;color:#8a8064;">🗾 Mappa in caricamento o offline.<br>Usa i pulsanti delle tappe per aprire direttamente Google Maps.</div>';
+        return;
+      }
+      try {
+        map = L.map('map', { zoomControl: false, attributionControl: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          crossOrigin: true
+        }).addTo(map);
+        markersLayer = L.layerGroup().addTo(map);
+      } catch (e) {
+        console.warn('Errore mappa:', e);
+      }
+    }
+
+    function pinIcon(label) {
+      return L.divIcon({
+        className: '',
+        html: `<div class="leaflet-marker-pin"><span>${label}</span></div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 26]
+      });
+    }
+
+    function renderDayStrip() {
+      const strip = document.getElementById('dayStrip');
+      strip.innerHTML = DAYS.map((d, i) => `
+    <div class="day-chip ${i === current ? 'active' : ''}" data-i="${i}">
+      <span class="dow">${d.dow}</span>
+      <span class="num">${d.num}</span>
+    </div>`).join('');
+      strip.querySelectorAll('.day-chip').forEach(el => {
+        el.addEventListener('click', () => { current = parseInt(el.dataset.i); render(); });
+      });
+    }
+
+    function renderDayCard() {
+      const d = DAYS[current];
+      document.getElementById('dayCard').innerHTML = `
+    <p class="city">${d.city}</p>
+    <h2>${d.title}</h2>
+    ${d.note ? `<p class="note">${d.note}</p>` : ''}
+  `;
+    }
+
+    function renderMap() {
+      if (typeof L === 'undefined' || !map) return;
+      try {
+        markersLayer.clearLayers();
+        const d = DAYS[current];
+        const latlngs = [];
+        d.stops.forEach((s, i) => {
+          const m = L.marker([s.lat, s.lng], { icon: pinIcon(i + 1) }).addTo(markersLayer);
+          m.bindPopup(`<b>${s.title}</b>`);
+          latlngs.push([s.lat, s.lng]);
+        });
+        if (latlngs.length > 1) {
+          L.polyline(latlngs, { color: '#b5432f', weight: 2, dashArray: '5,7', opacity: 0.7 }).addTo(markersLayer);
+        }
+        const bounds = L.latLngBounds(latlngs);
+        setTimeout(() => {
+          try {
+            map.invalidateSize();
+            if (latlngs.length === 1) { map.setView(latlngs[0], 13); }
+            else if (latlngs.length > 1) { map.fitBounds(bounds, { padding: [28, 28] }); }
+          } catch (err) { }
+        }, 150);
+      } catch (e) {
+        console.warn('Errore render mappa:', e);
+      }
+    }
+
+    function renderTimeline() {
+      const d = DAYS[current];
+      const tl = document.getElementById('timeline');
+      tl.innerHTML = d.stops.map((s, i) => `
+    <div class="stop">
+      <div class="stop-rail">
+        <div class="stop-dot">${s.icon}</div>
+        ${i < d.stops.length - 1 ? '<div class="stop-line"></div>' : ''}
+      </div>
+      <div class="stop-body" data-i="${i}">
+        <div class="stop-time">${s.time}</div>
+        <div class="stop-title">${s.title} <span class="chevron">▾</span></div>
+        <div class="stop-detail"><div class="stop-detail-inner">
+          ${s.detail}
+          ${s.note ? `<div class="stop-note">${s.note}</div>` : ''}
+          <div class="stop-actions">
+            <button class="btn-detail" data-i="${i}">📖 Scopri di più</button>
+            <button class="btn-kanji" data-kanji="${s.kanji || s.title}" data-romaji="${s.title}">🈁 Nome Kanji</button>
+            <a class="btn-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Maps</a>
+            ${s.official ? `<a class="btn-official" target="_blank" rel="noopener" href="${s.official}">🔗 Sito</a>` : ''}
+          </div>
+        </div></div>
+      </div>
+    </div>
+  `).join('');
+
+      tl.querySelectorAll('.stop-body').forEach(el => {
+        el.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-map') || e.target.closest('.btn-detail') || e.target.closest('.btn-kanji') || e.target.closest('.btn-official')) return;
+          el.classList.toggle('open');
+        });
+      });
+      tl.querySelectorAll('.btn-detail').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openDetail(parseInt(el.dataset.i));
+        });
+      });
+      tl.querySelectorAll('.btn-kanji').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openKanji(el.dataset.kanji, el.dataset.romaji);
+        });
+      });
+    }
+
+    function openDetail(stopIndex) {
+      const d = DAYS[current];
+      const s = d.stops[stopIndex];
+      document.getElementById('dIcon').textContent = s.icon;
+      document.getElementById('dEyebrow').textContent = `${s.cat || 'Tappa'} · ${d.city}`;
+      document.getElementById('dTitle').textContent = s.title;
+      document.getElementById('dTime').textContent = `${d.dow} ${d.num} novembre · ore ${s.time}`;
+
+      const infoHtml = (s.info || []).map(item => `
+    <div class="info-card"><p class="k">${item.k}</p><p class="v">${item.v}</p></div>
+  `).join('');
+
+      document.getElementById('dBody').innerHTML = `
+    <h3>Perché visitarla</h3>
+    <p>${s.long || s.detail}</p>
+
+    ${infoHtml ? `<h3>Da sapere</h3><div class="info-grid">${infoHtml}</div>` : ''}
+
+    ${s.tip ? `<div class="detail-tip">💡 ${s.tip}</div>` : ''}
+
+    <div class="detail-actions">
+      <button class="btn-kanji-act" id="detailKanjiBtn">🈁 Mostra Nome in Kanji / Japanese</button>
+      <a class="btn-map-act" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}">📍 Apri in Google Maps</a>
+    </div>
+
+    <p class="detail-footer-note">Orari, prezzi e prenotazioni sono indicativi e possono cambiare: verificate sempre sul sito ufficiale dell'attrazione prima della visita.</p>
+  `;
+
+      document.getElementById('detailKanjiBtn').addEventListener('click', () => {
+        openKanji(s.kanji || s.title, s.title);
+      });
+
+      document.getElementById('detailPage').classList.add('open');
+      document.getElementById('detailPage').scrollTop = 0;
+    }
+
+    function closeDetail() {
+      document.getElementById('detailPage').classList.remove('open');
+    }
+    document.getElementById('detailClose').addEventListener('click', closeDetail);
+
+    /* ================= KANJI MODAL LOGIC ================= */
+    function openKanji(kanjiText, romajiText) {
+      document.getElementById('kanjiText').textContent = kanjiText;
+      document.getElementById('kanjiRomaji').textContent = romajiText;
+      document.getElementById('kanjiModal').classList.add('open');
+    }
+    function closeKanji() {
+      document.getElementById('kanjiModal').classList.remove('open');
+    }
+    document.getElementById('kanjiCloseBtn').addEventListener('click', closeKanji);
+
+    /* ================= CALCULATOR LOGIC ================= */
+    const calcModal = document.getElementById('calcModal');
+    const rateInput = document.getElementById('exchangeRate');
+    const jpyInput = document.getElementById('inputJpy');
+    const eurInput = document.getElementById('inputEur');
+
+    function openCalc() { calcModal.classList.add('open'); }
+    function closeCalc() { calcModal.classList.remove('open'); }
+    document.getElementById('openCalcBtn').addEventListener('click', openCalc);
+    document.getElementById('calcCloseBtn').addEventListener('click', closeCalc);
+
+    function convertJpy() {
+      const rate = parseFloat(rateInput.value) || 165;
+      const jpy = parseFloat(jpyInput.value);
+      if (!isNaN(jpy)) {
+        eurInput.value = (jpy / rate).toFixed(2);
+      } else {
+        eurInput.value = '';
+      }
+    }
+
+    function convertEur() {
+      const rate = parseFloat(rateInput.value) || 165;
+      const eur = parseFloat(eurInput.value);
+      if (!isNaN(eur)) {
+        jpyInput.value = Math.round(eur * rate);
+      } else {
+        jpyInput.value = '';
+      }
+    }
+
+    jpyInput.addEventListener('input', convertJpy);
+    eurInput.addEventListener('input', convertEur);
+    rateInput.addEventListener('input', () => {
+      if (jpyInput.value) convertJpy();
+      else if (eurInput.value) convertEur();
+    });
+
+    document.querySelectorAll('.quick-jpy button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        jpyInput.value = btn.dataset.v;
+        convertJpy();
+      });
+    });
+
+    /* ================= FLIGHTS MODAL LOGIC ================= */
+    const flightsModal = document.getElementById('flightsModal');
+    function openFlights() { flightsModal.classList.add('open'); }
+    function closeFlights() { flightsModal.classList.remove('open'); }
+    document.getElementById('openFlightsBtn').addEventListener('click', openFlights);
+    document.getElementById('flightsCloseBtn').addEventListener('click', closeFlights);
+
+    /* ================= NAV & RENDER ================= */
+    function renderNav() {
+      document.getElementById('dayCounter').textContent = `${current + 1} / ${DAYS.length}`;
+      document.getElementById('prevBtn').disabled = current === 0;
+      document.getElementById('nextBtn').disabled = current === DAYS.length - 1;
+    }
+
+    function render() {
+      renderDayStrip();
+      renderDayCard();
+      renderTimeline();
+      renderNav();
+      renderMap();
+      document.querySelector(`.day-chip[data-i="${current}"]`)?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => { if (current > 0) { current--; render(); } });
+    document.getElementById('nextBtn').addEventListener('click', () => { if (current < DAYS.length - 1) { current++; render(); } });
+
+    window.addEventListener('load', () => {
+      try { initMap(); } catch (e) { }
+      render();
+    });
+
+    /* ============================= WIDGET ORA ITALIA / GIAPPONE ============================= */
+    function updateClocks() {
+      const now = new Date();
+
+      // Ora in Italia (Europe/Rome gestisce automaticamente anche l'ora solare/legale)
+      const timeItStr = now.toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      // Ora in Giappone (Asia/Tokyo è fissa a UTC+9)
+      const timeJpStr = now.toLocaleTimeString('it-IT', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      const elIt = document.getElementById('timeIt');
+      const elJp = document.getElementById('timeJp');
+
+      if (elIt) elIt.textContent = timeItStr;
+      if (elJp) elJp.textContent = timeJpStr;
+    }
+
+    // Avvia subito e aggiorna ogni secondo
+    setInterval(updateClocks, 1000);
+    updateClocks();
   </script>
 </body>
 
