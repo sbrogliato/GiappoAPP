@@ -131,12 +131,16 @@
       background: #fff8e6;
       border: 1px solid #ebd494;
       border-radius: 12px;
-      display: flex;
+      display: none;
       align-items: flex-start;
       gap: 8px;
       font-size: 12px;
       color: #66511a;
       line-height: 1.45;
+    }
+
+    .conn-alert.show {
+      display: flex;
     }
 
     .conn-alert b {
@@ -916,8 +920,8 @@
     /* ---------- STICKY TIME BAR (WIDGET ORE) ---------- */
     .time-sticky-bar {
       position: fixed;
-      bottom: 15px;
-      /* Si posiziona appena sopra la barra di navigazione inferiore */
+      bottom: calc(64px + env(safe-area-inset-bottom));
+      /* Si posiziona appena sopra la barra di navigazione inferiore, senza sovrapporsi */
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 32px);
@@ -984,11 +988,10 @@
       </div>
     </div>
 
-    <!-- <div class="conn-alert">
+        <div class="conn-alert" id="connAlert">
       <span class="conn-icon">📶</span>
-      <div><b>Nota Connessione:</b> La connessione Wi-Fi o la eSIM possono avere cali di segnale nei treni, nelle
-        stazioni sotterranee o nelle zone montane.</div>
-    </div> -->
+      <div id="connAlertText"><b>Sei offline.</b> Può capitare in treno, in galleria o in zone di montagna — alcune funzioni come la mappa o l'aggiornamento del cambio potrebbero non funzionare finché il segnale non torna.</div>
+    </div>
 
     <div class="day-strip" id="dayStrip"></div>
 
@@ -1063,8 +1066,7 @@
     <div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
       <button class="calc-close" id="flightsCloseBtn">✕</button>
       <h3 class="calc-title">✈️ Voli & Operativi</h3>
-      <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air
-          Dolomiti</b></p>
+      <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnie: <b>Lufthansa / ANA / Air Dolomiti</b>. Solo <b>LH4923</b> è confermato dal vostro documento di prenotazione; gli altri numeri sotto sono i voli di linea abituali su queste rotte/orari, non la conferma della vostra prenotazione specifica — verificateli sul vostro biglietto.</p>
 
       <!-- ANDATA -->
       <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
@@ -1072,27 +1074,27 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 1: Milano → Monaco</b>
-          <span class="flight-badge">Lufthansa LH7433</span>
+          <span class="flight-badge">Probabile: LH7433 (EN8281)</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MXP</div>
-            <div class="sub">Milano Malpensa T1</div>
+            <div class="sub">Milano Malpensa</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco di Baviera T2</div>
+            <div class="sub">Monaco di Baviera</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
           <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
+          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">Operato da Air Dolomiti, in codeshare Lufthansa LH7433. Orario di riferimento trovato online: 06:20→07:30 — leggermente diverso dal vostro 06:05→07:20, quindi verificate sul biglietto.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH7433" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH7433
-            Live</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH7433 (da verificare)</a>
         </div>
       </div>
 
@@ -1103,28 +1105,28 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 2: Monaco → Tokyo Haneda</b>
-          <span class="flight-badge">Lufthansa LH714</span>
+          <span class="flight-badge">Probabile: LH714</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco T2</div>
+            <div class="sub">Monaco</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">HND</div>
-            <div class="sub">Tokyo Haneda T3</div>
+            <div class="sub">Tokyo Haneda</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
           <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
           <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
+          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">LH714 è il volo Lufthansa Monaco→Haneda operato stabilmente da anni su questa rotta (storicamente anche in codeshare ANA NH5852) — probabile ma non confermato per la vostra data esatta.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH714" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714
-            Live</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714 (da verificare)</a>
         </div>
       </div>
 
@@ -1134,69 +1136,71 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 1: Tokyo Haneda → Monaco</b>
-          <span class="flight-badge">Lufthansa LH715</span>
+          <span class="flight-badge">Probabile: LH715</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">HND</div>
-            <div class="sub">Tokyo Haneda T3</div>
+            <div class="sub">Tokyo Haneda</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco T2</div>
+            <div class="sub">Monaco</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
           <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
+          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">LH715 è il volo di ritorno storico su questa rotta — probabile ma non confermato per la vostra data esatta.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH715" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715
-            Live</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715 (da verificare)</a>
         </div>
       </div>
 
       <div class="layover-box">
-        ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
+        ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 40 minuti
       </div>
 
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 2: Monaco → Milano</b>
-          <span class="flight-badge">Lufthansa LH9512</span>
+          <span class="flight-badge">Lufthansa LH4923 ✓ confermato</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco T2</div>
+            <div class="sub">Monaco</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MXP</div>
-            <div class="sub">Milano Malpensa T1</div>
+            <div class="sub">Milano Malpensa</div>
           </div>
         </div>
         <div class="flight-times">
-          <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
+          <div><b>Partenza:</b> 24 Nov 2026 — <b>08:05</b></div>
           <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
         </div>
         <div style="margin-top:8px;">
-          <a href="https://www.flightaware.com/live/flight/LH9512" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH9512
+          <a href="https://www.flightaware.com/live/flight/LH4923" target="_blank" rel="noopener" class="btn-map"
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH4923
             Live</a>
         </div>
       </div>
 
       <div
         style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
-        💡 <b>Info Bagagli & Check-in:</b>
+        ⚠️ <b>Nota:</b> solo LH4923 risulta scritto nel vostro documento di prenotazione originale. Gli altri numeri (LH7433, LH714, LH715) sono i voli abitualmente operati su queste rotte/orari secondo dati pubblici di settore, non la conferma della vostra prenotazione — controllateli sulla vostra e-ticket prima di fare affidamento sul tracciamento live.
+      </div>
+      <div
+        style="margin-top:8px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
+        💡 <b>Info Bagagli & Check-in (indicativo, da confermare):</b>
         <ul style="margin:4px 0 0; padding-left:16px;">
-          <li>Check-in online disponibile 24 ore prima del decollo.</li>
-          <li><b>Bagagli in stiva:</b> Economy Standard = 1 valigia (max 23 kg); Premium Economy = 2 valigie (max 23 kg
-            ciascuna).</li>
-          <li><b>Bagaglio a mano:</b> 1 pezzo fino a 8 kg + 1 borsetta/zainetto personale.</li>
+          <li>Check-in online disponibile in genere 24 ore prima del decollo.</li>
+          <li>Le franchigie bagaglio dipendono dalla tariffa acquistata: controllatele nella vostra conferma di prenotazione.</li>
           <li>Compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
         </ul>
       </div>
@@ -2030,6 +2034,20 @@
     // Avvia subito e aggiorna ogni secondo
     setInterval(updateClocks, 1000);
     updateClocks();
+
+    /* ============================= AVVISO CONNESSIONE (dinamico) ============================= */
+    function updateConnectionStatus() {
+      const alertBox = document.getElementById('connAlert');
+      if (!alertBox) return;
+      if (navigator.onLine === false) {
+        alertBox.classList.add('show');
+      } else {
+        alertBox.classList.remove('show');
+      }
+    }
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    updateConnectionStatus();
   </script>
 </body>
 
