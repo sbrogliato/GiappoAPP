@@ -131,16 +131,12 @@
       background: #fff8e6;
       border: 1px solid #ebd494;
       border-radius: 12px;
-      display: none;
+      display: flex;
       align-items: flex-start;
       gap: 8px;
       font-size: 12px;
       color: #66511a;
       line-height: 1.45;
-    }
-
-    .conn-alert.show {
-      display: flex;
     }
 
     .conn-alert b {
@@ -920,8 +916,8 @@
     /* ---------- STICKY TIME BAR (WIDGET ORE) ---------- */
     .time-sticky-bar {
       position: fixed;
-      bottom: calc(64px + env(safe-area-inset-bottom));
-      /* Si posiziona appena sopra la barra di navigazione inferiore, senza sovrapporsi */
+      bottom: 15px;
+      /* Si posiziona appena sopra la barra di navigazione inferiore */
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 32px);
@@ -988,10 +984,11 @@
       </div>
     </div>
 
-        <div class="conn-alert" id="connAlert">
+    <!-- <div class="conn-alert">
       <span class="conn-icon">📶</span>
-      <div id="connAlertText"><b>Sei offline.</b> Può capitare in treno, in galleria o in zone di montagna — alcune funzioni come la mappa o l'aggiornamento del cambio potrebbero non funzionare finché il segnale non torna.</div>
-    </div>
+      <div><b>Nota Connessione:</b> La connessione Wi-Fi o la eSIM possono avere cali di segnale nei treni, nelle
+        stazioni sotterranee o nelle zone montane.</div>
+    </div> -->
 
     <div class="day-strip" id="dayStrip"></div>
 
@@ -1066,7 +1063,8 @@
     <div class="calc-card" style="max-width:420px; max-height:85vh; overflow-y:auto;">
       <button class="calc-close" id="flightsCloseBtn">✕</button>
       <h3 class="calc-title">✈️ Voli & Operativi</h3>
-      <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnie: <b>Lufthansa / ANA / Air Dolomiti</b>. Solo <b>LH4923</b> è confermato dal vostro documento di prenotazione; gli altri numeri sotto sono i voli di linea abituali su queste rotte/orari, non la conferma della vostra prenotazione specifica — verificateli sul vostro biglietto.</p>
+      <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Compagnia: <b>Lufthansa / Air
+          Dolomiti</b></p>
 
       <!-- ANDATA -->
       <div class="flight-section-title">🛫 VOLO DI ANDATA — Mercoledì 11 Nov 2026</div>
@@ -1074,27 +1072,27 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 1: Milano → Monaco</b>
-          <span class="flight-badge">Probabile: LH7433 (EN8281)</span>
+          <span class="flight-badge">Lufthansa LH7433</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MXP</div>
-            <div class="sub">Milano Malpensa</div>
+            <div class="sub">Milano Malpensa T1</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco di Baviera</div>
+            <div class="sub">Monaco di Baviera T2</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 11 Nov 2026 — <b>06:05</b></div>
           <div><b>Arrivo:</b> 11 Nov 2026 — 07:20</div>
-          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">Operato da Air Dolomiti, in codeshare Lufthansa LH7433. Orario di riferimento trovato online: 06:20→07:30 — leggermente diverso dal vostro 06:05→07:20, quindi verificate sul biglietto.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH7433" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH7433 (da verificare)</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH7433
+            Live</a>
         </div>
       </div>
 
@@ -1105,28 +1103,28 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 2: Monaco → Tokyo Haneda</b>
-          <span class="flight-badge">Probabile: LH714</span>
+          <span class="flight-badge">Lufthansa LH714</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco</div>
+            <div class="sub">Monaco T2</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">HND</div>
-            <div class="sub">Tokyo Haneda</div>
+            <div class="sub">Tokyo Haneda T3</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 11 Nov 2026 — <b>10:25</b></div>
           <div><b>Arrivo:</b> 12 Nov 2026 — <b>06:55 JST</b> (+1g)</div>
           <div><b>Note:</b> Pernottamento e pasti a bordo.</div>
-          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">LH714 è il volo Lufthansa Monaco→Haneda operato stabilmente da anni su questa rotta (storicamente anche in codeshare ANA NH5852) — probabile ma non confermato per la vostra data esatta.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH714" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714 (da verificare)</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH714
+            Live</a>
         </div>
       </div>
 
@@ -1136,71 +1134,69 @@
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 1: Tokyo Haneda → Monaco</b>
-          <span class="flight-badge">Probabile: LH715</span>
+          <span class="flight-badge">Lufthansa LH715</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">HND</div>
-            <div class="sub">Tokyo Haneda</div>
+            <div class="sub">Tokyo Haneda T3</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco</div>
+            <div class="sub">Monaco T2</div>
           </div>
         </div>
         <div class="flight-times">
           <div><b>Partenza:</b> 23 Nov 2026 — <b>23:30 JST</b></div>
           <div><b>Arrivo:</b> 24 Nov 2026 — 06:25</div>
-          <div style="margin-top:4px; font-size:10.5px; color:#8a7a4a;">LH715 è il volo di ritorno storico su questa rotta — probabile ma non confermato per la vostra data esatta.</div>
         </div>
         <div style="margin-top:8px;">
           <a href="https://www.flightaware.com/live/flight/LH715" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715 (da verificare)</a>
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH715
+            Live</a>
         </div>
       </div>
 
       <div class="layover-box">
-        ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 40 minuti
+        ⏱️ <b>Scalo a Monaco (MUC):</b> 1 ora e 20 minuti
       </div>
 
       <div class="flight-card">
         <div class="flight-header-row">
           <b>Tratta 2: Monaco → Milano</b>
-          <span class="flight-badge">Lufthansa LH4923 ✓ confermato</span>
+          <span class="flight-badge">Lufthansa LH9512</span>
         </div>
         <div class="flight-route">
           <div class="flight-loc">
             <div class="code">MUC</div>
-            <div class="sub">Monaco</div>
+            <div class="sub">Monaco T2</div>
           </div>
           <div class="flight-arrow">➔</div>
           <div class="flight-loc">
             <div class="code">MXP</div>
-            <div class="sub">Milano Malpensa</div>
+            <div class="sub">Milano Malpensa T1</div>
           </div>
         </div>
         <div class="flight-times">
-          <div><b>Partenza:</b> 24 Nov 2026 — <b>08:05</b></div>
+          <div><b>Partenza:</b> 24 Nov 2026 — 07:45</div>
           <div><b>Arrivo:</b> 24 Nov 2026 — <b>09:10</b></div>
         </div>
         <div style="margin-top:8px;">
-          <a href="https://www.flightaware.com/live/flight/LH4923" target="_blank" rel="noopener" class="btn-map"
-            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH4923
+          <a href="https://www.flightaware.com/live/flight/LH9512" target="_blank" rel="noopener" class="btn-map"
+            style="display:inline-block; font-size:11px; padding:4px 10px; text-decoration:none;">📡 Traccia LH9512
             Live</a>
         </div>
       </div>
 
       <div
         style="margin-top:12px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
-        ⚠️ <b>Nota:</b> solo LH4923 risulta scritto nel vostro documento di prenotazione originale. Gli altri numeri (LH7433, LH714, LH715) sono i voli abitualmente operati su queste rotte/orari secondo dati pubblici di settore, non la conferma della vostra prenotazione — controllateli sulla vostra e-ticket prima di fare affidamento sul tracciamento live.
-      </div>
-      <div
-        style="margin-top:8px; padding:10px; background:#f6f1e6; border-radius:10px; font-size:11.5px; color:#5c5646; line-height:1.5;">
-        💡 <b>Info Bagagli & Check-in (indicativo, da confermare):</b>
+        💡 <b>Info Bagagli & Check-in:</b>
         <ul style="margin:4px 0 0; padding-left:16px;">
-          <li>Check-in online disponibile in genere 24 ore prima del decollo.</li>
-          <li>Le franchigie bagaglio dipendono dalla tariffa acquistata: controllatele nella vostra conferma di prenotazione.</li>
+          <li>Check-in online disponibile 24 ore prima del decollo.</li>
+          <li><b>Bagagli in stiva:</b> Economy Standard = 1 valigia (max 23 kg); Premium Economy = 2 valigie (max 23 kg
+            ciascuna).</li>
+          <li><b>Bagaglio a mano:</b> 1 pezzo fino a 8 kg + 1 borsetta/zainetto personale.</li>
           <li>Compilare la dichiarazione <b>Visit Japan Web</b> prima della partenza.</li>
         </ul>
       </div>
@@ -1361,7 +1357,14 @@
             tip: "Ad Ameyoko si può fare un pranzo veloce e informale in piedi tra le bancarelle di pesce e frutti di mare."
           },
           {
-            time: "14:00", icon: "⛴️", cat: "Esperienza", title: "Crociera sul fiume Sumida (Tokyo Cruise)", kanji: "東京都水上バス (浅草乗り場)", lat: 35.7100, lng: 139.8003,
+            time: "12:45", icon: "🍁", cat: "Quartiere", title: "Passeggiata nel quartiere retrò di Yanesen", kanji: "谷根千（谷中・根津・千駄木）", lat: 35.7280, lng: 139.7669,
+            detail: "Proseguimento a piedi dal Parco di Ueno verso il caratteristico quartiere vintage di Yanesen (Yanaka, Nezu, Sendagi), tra vecchie botteghe e vicoli d'atmosfera.",
+            long: "Yanesen è uno dei pochi angoli di Tokyo sopravvissuti ai terremoti e ai bombardamenti della Seconda Guerra Mondiale, motivo per cui conserva ancora l'atmosfera shitamachi di inizio '900: casette in legno, piccoli templi di quartiere e la pittoresca Yanaka Ginza, una via commerciale in miniatura con botteghe artigiane e gatti che sonnecchiano sui gradini.",
+            info: [{ k: "Ingresso", v: "Gratuito" }, { k: "Yanaka Ginza", v: "Vicolo dello shopping locale" }, { k: "Durata consigliata", v: "1 – 1,5 ore" }],
+            tip: "Fermatevi da una delle friggitorie di Yanaka Ginza per un menchi-katsu (cotoletta di carne macinata) da passeggio: è uno spuntino tipico del quartiere."
+          },
+          {
+            time: "14:30", icon: "⛴️", cat: "Esperienza", title: "Crociera sul fiume Sumida (Tokyo Cruise)", kanji: "東京都水上バス (浅草乗り場)", lat: 35.7100, lng: 139.8003,
             detail: "Battello panoramico verso i Giardini Hama Rikyu o l'isola di Odaiba, spesso a bordo di imbarcazioni futuristiche come Himiko o Hotaluna.",
             long: "Le imbarcazioni Himiko e Hotaluna sono state disegnate dal fumettista Leiji Matsumoto (Capitan Harlock, Galaxy Express 999) e hanno un design fantascientifico che contrasta volutamente con i ponti storici e i quartieri tradizionali che si attraversano lungo il tragitto.",
             info: [{ k: "Durata tragitto", v: "35 – 50 min a seconda della tratta" }, { k: "Biglietti", v: "Acquistabili online o al molo" }, { k: "Consiglio", v: "Posto vicino al finestrino per le foto" }],
@@ -1421,7 +1424,7 @@
         ]
       },
       {
-        date: "2026-11-16", dow: "Lun", num: "16", city: "Kyoto", title: "Trasferimento a Kyoto, Kimono & Tè",
+        date: "2026-11-16", dow: "Lun", num: "16", city: "Kyoto", title: "Trasferimento a Kyoto, Kimono con Maikoya & Shabu-Shabu da Izumoya",
         note: "🚄 Shinkansen Tokyo → Kyoto (~2h15). Check-in <b>Oyado Kawaramachi Gojo</b>.",
         stops: [
           {
@@ -1433,11 +1436,12 @@
             official: "https://global.jr-central.co.jp/en/"
           },
           {
-            time: "13:30", icon: "👘", cat: "Esperienza", title: "Noleggio Kimono & Cerimonia del Tè", kanji: "祇園 / 東山 (Higashiyama)", lat: 34.9990, lng: 135.7790,
-            detail: "Esperienza tradizionale: si indossa un kimono o yukata storico e si partecipa a un'autentica cerimonia del tè (Sadō) a Higashiyama.",
-            long: "La cerimonia del tè giapponese (Sadō o Chanoyu) è un rituale codificato da secoli, in cui ogni gesto — dal modo di pulire gli utensili al modo di ruotare la tazza — ha un significato preciso legato ai principi di armonia, rispetto, purezza e tranquillità. Indossare il kimono prima di visitare i templi storici di Higashiyama rende l'esperienza ancora più immersiva.",
-            info: [{ k: "Prenotazione", v: "Consigliata 1-2 mesi prima" }, { k: "Durata kimono", v: "Solitamente giornata intera" }, { k: "Durata cerimonia", v: "30 – 45 min" }],
-            tip: "Scegliete scarpe comode da togliere e rimettere facilmente: si entra scalzi in molte sale da tè e templi."
+            time: "13:30", icon: "👘", cat: "Esperienza", title: "Kimono & Cerimonia del Tè da Maikoya", kanji: "舞妓や (MAIKOYA) / 東山 (Higashiyama)", lat: 34.9990, lng: 135.7790,
+            detail: "Esperienza tradizionale presso la sede Maikoya di Kyoto: si indossa un kimono o yukata storico e si partecipa a un'autentica cerimonia del tè (Sadō) prima di dirigersi verso Higashiyama.",
+            long: "Maikoya è uno degli studi più conosciuti di Kyoto per esperienze culturali guidate in costume: noleggio kimono con assistenza per la vestizione e cerimonia del tè (Sadō o Chanoyu), un rituale codificato da secoli in cui ogni gesto — dal modo di pulire gli utensili al modo di ruotare la tazza — ha un significato preciso legato ai principi di armonia, rispetto, purezza e tranquillità. Indossare il kimono prima di visitare i templi storici di Higashiyama rende l'esperienza ancora più immersiva.",
+            info: [{ k: "Prenotazione", v: "Consigliata 1-2 mesi prima, sito ufficiale Maikoya o piattaforme Klook/Viator" }, { k: "Durata kimono", v: "Solitamente giornata intera" }, { k: "Durata cerimonia", v: "30 – 45 min" }],
+            tip: "Scegliete scarpe comode da togliere e rimettere facilmente: si entra scalzi in molte sale da tè e templi.",
+            official: "https://mai-ko.com/what-to-do-in-japan/kyoto/"
           },
           {
             time: "16:00", icon: "🍁", cat: "Tempio", title: "Ninenzaka, Sannenzaka & Kiyomizu-dera", kanji: "二年坂・三年坂・清水寺", lat: 34.9949, lng: 135.7850,
@@ -1448,17 +1452,17 @@
             official: "https://www.kiyomizudera.or.jp/en/"
           },
           {
-            time: "18:30", icon: "🏮", cat: "Cibo", title: "Gion & cena a Pontochō", kanji: "祇園 / 先斗町", lat: 35.0037, lng: 135.7752,
-            detail: "Passeggiata serale nello storico quartiere delle geiko e maiko, cena lungo il vicolo illuminato di Pontochō.",
-            long: "Gion è il quartiere storico dell'intrattenimento tradizionale di Kyoto, dove è ancora possibile intravedere geiko (geishe di Kyoto) e maiko (apprendiste) dirigersi agli appuntamenti serali. Pontochō, una strettissima via parallela al fiume Kamo, ospita ristoranti di ogni fascia di prezzo, molti con terrazze estive sospese sull'acqua (kawadoko, stagionali).",
-            info: [{ k: "Ingresso", v: "Libero" }, { k: "Consiglio etico", v: "Non fermare o inseguire le maiko per foto: sono professioniste al lavoro" }],
+            time: "18:30", icon: "🏮", cat: "Cibo", title: "Gion & cena Shabu-Shabu da Izumoya (Pontochō)", kanji: "祇園 / 先斗町 いづもや", lat: 35.0037, lng: 135.7752,
+            detail: "Passeggiata serale nello storico quartiere delle geiko e maiko, seguita da una cena speciale a base di Shabu-Shabu tradizionale servito su tatami presso il ristorante Izumoya a Pontochō, affacciato sul fiume.",
+            long: "Gion è il quartiere storico dell'intrattenimento tradizionale di Kyoto, dove è ancora possibile intravedere geiko (geishe di Kyoto) e maiko (apprendiste) dirigersi agli appuntamenti serali. Pontochō, una strettissima via parallela al fiume Kamo, ospita ristoranti di ogni fascia di prezzo; Izumoya è una tappa classica per lo shabu-shabu, servito su tatami in sale tradizionali con vista sul fiume.",
+            info: [{ k: "Ingresso", v: "Libero" }, { k: "Prenotazione Izumoya", v: "Consigliata 1-2 mesi prima, telefono o concierge" }, { k: "Consiglio etico", v: "Non fermare o inseguire le maiko per foto: sono professioniste al lavoro" }],
             tip: "Se vedete una maiko, un saluto discreto e nessuna foto ravvicinata senza permesso è il comportamento corretto e rispettato dai locali."
           }
         ]
       },
       {
         date: "2026-11-17", dow: "Mar", num: "17", city: "Kyoto", title: "Kyoto Classica & Il Grande Foliage",
-        note: "Percorso ottimizzato: Fushimi Inari + Tōfuku-ji al mattino, Kinkaku-ji <i>oppure</i> Eikandō al pomeriggio.",
+        note: "Percorso ottimizzato: Fushimi Inari + Tōfuku-ji al mattino, Castello di Nijō a metà giornata, Kinkaku-ji <i>oppure</i> Eikandō al pomeriggio.",
         stops: [
           {
             time: "08:00", icon: "⛩️", cat: "Tempio", title: "Fushimi Inari Taisha", kanji: "伏見稲荷大社", lat: 34.9671, lng: 135.7727,
@@ -1477,7 +1481,15 @@
             official: "https://tofukuji.jp/"
           },
           {
-            time: "14:00", icon: "🏯", cat: "Tempio", title: "Kinkaku-ji (Padiglione d'Oro)", kanji: "金閣寺 (鹿苑寺)", lat: 35.0394, lng: 135.7292,
+            time: "12:15", icon: "🏯", cat: "Castello", title: "Castello di Nijō", kanji: "二条城", lat: 35.0142, lng: 135.7481,
+            detail: "Fortezza-residenza degli shogun Tokugawa, patrimonio UNESCO, celebre per i 'pavimenti dell'usignolo' che cigolano per segnalare intrusi e per gli ampi giardini.",
+            long: "Costruito nel 1603 come residenza kyotoita dello shogunato Tokugawa e teatro, nel 1867, della restituzione del potere all'imperatore che pose fine allo shogunato, il Nijō-jō è oggi patrimonio mondiale UNESCO. Il palazzo Ninomaru, con le sue sale decorate da paraventi dorati, è celebre per i 'nightingale floors' (uguisubari): pavimenti in legno progettati per cigolare a ogni passo, un sistema di allarme anti-intrusi dell'epoca. I giardini che circondano il castello, con aceri e stagni, sono particolarmente scenografici nel periodo del Momiji.",
+            info: [{ k: "Ingresso castello", v: "800 ¥" }, { k: "Ingresso + Palazzo Ninomaru", v: "1.300 ¥" }, { k: "Orario", v: "8:45 – 16:00 (ultimo ingresso), chiusura 17:00" }, { k: "Durata consigliata", v: "1 – 1,5 ore" }],
+            tip: "Non perdetevi il Palazzo Ninomaru: costa un piccolo extra ma è la parte più suggestiva, con le sale in stile Edo e i pavimenti che 'cantano'. Fermatevi per un pranzo veloce nella zona (ristorantini vicino a Nijōjō-mae) prima di ripartire per Kinkaku-ji: non ci sarà altra pausa pranzo comoda nel pomeriggio.",
+            official: "https://nijo-jocastle.city.kyoto.lg.jp/?lang=en"
+          },
+          {
+            time: "15:00", icon: "🏯", cat: "Tempio", title: "Kinkaku-ji (Padiglione d'Oro)", kanji: "金閣寺 (鹿苑寺)", lat: 35.0394, lng: 135.7292,
             detail: "Tempio zen ricoperto di foglia d'oro, riflesso nello stagno antistante — una delle immagini più iconiche del Giappone.",
             long: "Costruito originariamente come villa di un potente shogun nel XIV secolo e trasformato in tempio zen dopo la sua morte, il padiglione attuale è una ricostruzione del 1955 in seguito a un incendio doloso. I due piani superiori sono interamente ricoperti in foglia d'oro, e il suo riflesso nello stagno Kyoko-chi crea una delle vedute più fotografate del Giappone.",
             info: [{ k: "Ingresso", v: "A pagamento" }, { k: "Percorso", v: "A senso unico, non si può tornare indietro" }, { k: "Durata consigliata", v: "45 min" }],
@@ -1485,7 +1497,7 @@
             official: "https://www.shokoku-ji.jp/en/kinkakuji/"
           },
           {
-            time: "14:00", icon: "🍁", cat: "Tempio", title: "In alternativa: Eikandō", kanji: "永観堂 (禅林寺)", lat: 35.0163, lng: 135.7943,
+            time: "15:00", icon: "🍁", cat: "Tempio", title: "In alternativa: Eikandō", kanji: "永観堂 (禅林寺)", lat: 35.0163, lng: 135.7943,
             detail: "Tra le viste più spettacolari sugli aceri rossi di tutto il Giappone, con giardino a stagno.",
             long: "Conosciuto anche come Zenrin-ji, questo tempio della zona del Sentiero del Filosofo è considerato da molti la meta autunnale per eccellenza a Kyoto: centinaia di aceri circondano gli edifici e uno stagno panoramico, con illuminazioni serali speciali durante il picco del foliage.",
             info: [{ k: "Ingresso", v: "A pagamento, maggiorato in stagione" }, { k: "Illuminazioni serali", v: "Frequenti a novembre, orari variabili" }, { k: "Durata consigliata", v: "1 ora" }],
@@ -1572,8 +1584,8 @@
         ]
       },
       {
-        date: "2026-11-20", dow: "Ven", num: "20", city: "Takao → Nara → Osaka", title: "Ryokan, Nara e Street Food a Osaka",
-        note: "⚠️ Spedire i bagagli pesanti dal ryokan a Osaka via takkyubin, per girare Nara con solo un bagaglio a mano.",
+        date: "2026-11-20", dow: "Ven", num: "20", city: "Takao → Uji → Nara → Osaka", title: "Da Takao ad Osaka: Uji, Nara & Shinsekai la Sera",
+        note: "⚠️ Spedire i bagagli pesanti dal ryokan a Osaka via takkyubin, per girare Uji e Nara con solo un bagaglio a mano. 🚉 Uji è sulla linea JR Nara, esattamente lungo il tragitto verso Nara: nessuna deviazione.",
         stops: [
           {
             time: "08:30", icon: "🍚", cat: "Alloggio", title: "Colazione al ryokan & spedizione bagagli", kanji: "宅急便 (Takkyubin)", lat: 35.0670, lng: 135.6740,
@@ -1581,10 +1593,18 @@
             long: "Il servizio takkyubin (es. Yamato Transport / Kuroneko) è un corriere bagagli molto affidabile e diffuso in Giappone: consegna spesso in giornata o il giorno successivo, e permette di girare città come Nara con il solo bagaglio a mano, rendendo la giornata di trasferimento molto più agevole.",
             info: [{ k: "Servizio", v: "Takkyubin (Yamato/Kuroneko)" }, { k: "Consegna", v: "Stesso giorno in tarda serata o giorno successivo" }, { k: "Da chiedere", v: "Opzione consegna in giornata in reception" }],
             official: "https://www.kuronekoyamato.co.jp/en/",
-            tip: "Tenete con voi solo l'essenziale per la giornata: cambio, documenti, macchina fotografica e l'occorrente per il pranzo a Nara."
+            tip: "Tenete con voi solo l'essenziale per la giornata: cambio, documenti, macchina fotografica e l'occorrente per il pranzo a Uji/Nara."
           },
           {
-            time: "11:30", icon: "🦌", cat: "Natura", title: "Parco di Nara", kanji: "奈良公園", lat: 34.6851, lng: 135.8430,
+            time: "11:45", icon: "🍵", cat: "Esperienza", title: "Uji: Tempio Byōdō-in & pausa matcha", kanji: "宇治 / 平等院", lat: 34.8892, lng: 135.8085,
+            detail: "Sosta a Uji, la culla della cultura del tè giapponese, lungo il tragitto in treno verso Nara. Visita al Byōdō-in (patrimonio UNESCO, l'edificio raffigurato sulla moneta da 10 yen) e pranzo leggero o pausa dolce in una storica casa da tè.",
+            long: "Uji è considerata la patria del miglior tè verde del Giappone fin dal periodo Heian: le colline intorno alla città coltivano tè da secoli, e il nome 'Uji' su un pacchetto di matcha è ancora oggi sinonimo di qualità superiore. Il Byōdō-in, costruito nell'XI secolo come villa aristocratica e poi convertito in tempio, ospita la celebre Phoenix Hall (Hōō-dō), riflessa in uno stagno e riprodotta sulla moneta da 10 yen. Lungo la via principale verso il tempio si trovano storiche case da tè come Nakamura Tokichi o Tsuen (una delle più antiche del Giappone, fondata nel 1160), dove assaggiare matcha, gyokuro e i celebri dolci al tè verde.",
+            info: [{ k: "Ingresso tempio", v: "600 ¥ (+300 ¥ per la Phoenix Hall)" }, { k: "Orario", v: "8:30 – 17:30 (ultimo ingresso 17:15)" }, { k: "Durata consigliata", v: "1,5 – 2 ore incl. casa da tè" }],
+            tip: "Provate il gyokuro (non solo matcha): è un'altra specialità di Uji, un tè verde in foglie dal gusto più dolce e complesso, spesso sottovalutato rispetto al matcha.",
+            official: "https://www.byodoin.or.jp/en/"
+          },
+          {
+            time: "14:30", icon: "🦌", cat: "Natura", title: "Parco di Nara", kanji: "奈良公園", lat: 34.6851, lng: 135.8430,
             detail: "Oltre mille cervi sika vivono liberi nel parco, considerati messaggeri divini secondo la tradizione shintoista.",
             long: "I cervi di Nara sono protetti come 'tesoro nazionale naturale' e si sono ormai abituati completamente ai visitatori, arrivando a inchinarsi leggermente per chiedere gli shika senbei, gli appositi biscotti di riso venduti dalle bancarelle nel parco, unico cibo che dovrebbe essere loro offerto.",
             info: [{ k: "Ingresso parco", v: "Gratuito" }, { k: "Biscotti per i cervi", v: "Acquistabili sul posto, poche centinaia di yen" }, { k: "Attenzione", v: "Alcuni cervi possono essere insistenti: non agitare il cibo davanti a loro" }],
@@ -1592,7 +1612,7 @@
             official: "https://nara-park.com/en/"
           },
           {
-            time: "13:00", icon: "🛕", cat: "Tempio", title: "Tempio Tōdai-ji", kanji: "東大寺", lat: 34.6889, lng: 135.8398,
+            time: "15:45", icon: "🛕", cat: "Tempio", title: "Tempio Tōdai-ji", kanji: "東大寺", lat: 34.6889, lng: 135.8398,
             detail: "Ospita il Daibutsuden, uno dei più grandi edifici in legno al mondo, con il Grande Buddha in bronzo.",
             long: "Il Daibutsuden, ricostruito nel XVIII secolo dopo diversi incendi, è tuttora uno dei più grandi edifici in legno esistenti al mondo, pur essendo più piccolo dell'originale dell'VIII secolo. All'interno, la statua in bronzo del Grande Buddha (Daibutsu) è alta oltre 15 metri ed è una delle più grandi del Giappone.",
             info: [{ k: "Ingresso", v: "A pagamento, economico" }, { k: "Curiosità", v: "Un pilastro ha un foro alla base grande quanto una narice del Buddha: la tradizione dice che chi lo attraversa avrà buona fortuna" }],
@@ -1600,48 +1620,39 @@
             official: "https://www.todaiji.or.jp/english/"
           },
           {
-            time: "16:30", icon: "🏯", cat: "Alloggio", title: "Check-in Osaka & Castello di Osaka", kanji: "大阪城公園", lat: 34.6873, lng: 135.5262,
-            detail: "Check-in al KOKO HOTEL Osaka Umeda; i bagagli spediti al mattino dovrebbero già essere arrivati. Visita al celebre castello ricostruito nel '900.",
-            long: "Il Castello di Osaka, costruito originariamente nel 1583 da Toyotomi Hideyoshi, è stato distrutto e ricostruito più volte; l'edificio attuale, in cemento armato con ascensore interno, risale al 1931 ed ospita un museo sulla storia del castello e del suo fondatore, circondato da un ampio parco e fossati storici.",
-            info: [{ k: "Check-in hotel", v: "15:00 – 24:00" }, { k: "Ingresso castello", v: "A pagamento per il museo interno, parco gratuito" }, { k: "Durata consigliata", v: "1 – 1,5 ore" }],
-            tip: "Anche senza entrare nel museo, il parco che circonda il castello è già molto scenografico, soprattutto al tramonto.",
-            official: "https://www.osakacastle.net/english/"
+            time: "17:15", icon: "🛌", cat: "Alloggio", title: "Check-in KOKO HOTEL Osaka Umeda", kanji: "KOKOホテル大阪梅田", lat: 34.7025, lng: 135.4959,
+            detail: "Check-in in hotel dopo il trasferimento da Nara; i bagagli spediti al mattino dovrebbero già essere arrivati. Tempo per rinfrescarsi prima della serata a Shinsekai.",
+            long: "Il KOKO HOTEL Osaka Umeda si trova nel cuore del quartiere di Umeda, comodo per i collegamenti verso il resto della città. Dopo una giornata che ha toccato Uji, Nara e il trasferimento a Osaka, è un buon momento per lasciare i bagagli e darsi un attimo di respiro prima di uscire per la cena.",
+            info: [{ k: "Check-in", v: "15:00 – 24:00" }, { k: "Check-out", v: "01:00 – 11:00" }]
           },
           {
-            time: "18:30", icon: "🌆", cat: "Panorama", title: "Umeda Sky Building", kanji: "梅田スカイビル", lat: 34.7053, lng: 135.4903,
-            detail: "Osservatorio panoramico a cielo aperto tra le due torri collegate, la 'Floating Garden Observatory'.",
-            long: "Progettato dall'architetto Hiroshi Hara, l'Umeda Sky Building è formato da due torri gemelle di 40 piani collegate in cima da un anello panoramico, il 'Floating Garden Observatory', raggiungibile con scale mobili a vista sospese tra le due torri: una delle esperienze architettoniche più particolari di Osaka.",
-            info: [{ k: "Ingresso", v: "A pagamento" }, { k: "Momento migliore", v: "Tramonto, per vedere sia il giorno che le luci notturne" }],
-            tip: "Restate fino a dopo il tramonto: la vista cambia completamente quando si accendono le luci della città.",
-            official: "https://www.kuchu-teien.com/en/"
-          },
-          {
-            time: "20:00", icon: "🐙", cat: "Cibo", title: "Dōtonbori: takoyaki e okonomiyaki", kanji: "道頓堀", lat: 34.6687, lng: 135.5031,
-            detail: "Il quartiere più vivace di Osaka lungo un canale illuminato da neon, regno dello street food locale.",
-            long: "Dōtonbori nasce come quartiere dei teatri nel XVII secolo e oggi è famoso per le enormi insegne tridimensionali (il celebre cartellone Glico Running Man su tutti) e per lo street food: il takoyaki (polpette di polpo) e l'okonomiyaki (una sorta di frittata/pancake salato) sono le specialità di Osaka per eccellenza.",
-            info: [{ k: "Prezzo medio", v: "800 – 2.000 ¥ per lo street food" }, { k: "Foto iconica", v: "Cartellone Glico sul ponte Ebisubashi" }],
-            tip: "Provate il takoyaki appena fatto da una bancarella storica: è molto più buono bollente, quindi attenzione a non scottarvi al primo morso."
+            time: "19:00", icon: "🗼", cat: "Quartiere", title: "Shinsekai & Torre Tsūtenkaku by night", kanji: "新世界 / 通天閣", lat: 34.6524, lng: 135.5063,
+            detail: "Quartiere dall'atmosfera retrò anni '50, illuminato di sera, celebre per lo street food a base di kushikatsu: cena nei tipici izakaya del quartiere.",
+            long: "Costruito agli inizi del '900 ispirandosi a Parigi e New York, Shinsekai conserva ancora oggi un fascino un po' démodé, con insegne vintage e la torre Tsūtenkaku al centro, particolarmente scenografica quando si accendono le luci serali. È la patria del kushikatsu, spiedini impanati e fritti da intingere in una salsa comune (regola non scritta: mai intingere due volte) — perfetto come cena informale dopo una giornata intensa.",
+            info: [{ k: "Ingresso torre", v: "A pagamento per l'osservatorio" }, { k: "Kushikatsu", v: "Da provare nei locali storici della zona" }, { k: "Momento migliore", v: "Dopo il tramonto, con le insegne al neon accese" }],
+            tip: "Attenzione alla regola del 'no double dipping' nella salsa comune del kushikatsu: è presa molto sul serio dai locali.",
+            official: "https://www.tsutenkaku.co.jp/en/"
           }
         ]
       },
       {
-        date: "2026-11-21", dow: "Sab", num: "21", city: "Osaka", title: "Osaka Pittoresca",
-        note: "",
+        date: "2026-11-21", dow: "Sab", num: "21", city: "Osaka", title: "Osaka Pittoresca & Castello di Osaka",
+        note: "🏯 Il Castello di Osaka è stato spostato qui dal 20 novembre, per lasciare spazio a Uji lungo il tragitto verso Nara.",
         stops: [
           {
-            time: "09:30", icon: "🗼", cat: "Quartiere", title: "Shinsekai & Torre Tsūtenkaku", kanji: "新世界 / 通天閣", lat: 34.6524, lng: 135.5063,
-            detail: "Quartiere dall'atmosfera retrò anni '50, celebre per lo street food a base di kushikatsu.",
-            long: "Costruito agli inizi del '900 ispirandosi a Parigi e New York, Shinsekai conserva ancora oggi un fascino un po' démodé, con insegne vintage e la torre Tsūtenkaku al centro. È la patria del kushikatsu, spiedini impanati e fritti da intingere in una salsa comune (regola non scritta: mai intingere due volte).",
-            info: [{ k: "Ingresso torre", v: "A pagamento per l'osservatorio" }, { k: "Kushikatsu", v: "Da provare nei locali storici della zona" }],
-            tip: "Attenzione alla regola del 'no double dipping' nella salsa comune del kushikatsu: è presa molto sul serio dai locali.",
-            official: "https://www.tsutenkaku.co.jp/en/"
-          },
-          {
-            time: "11:00", icon: "⛩️", cat: "Tempio", title: "Santuario Namba Yasaka", kanji: "難波八阪神社", lat: 34.6614, lng: 135.4999,
+            time: "09:30", icon: "⛩️", cat: "Tempio", title: "Santuario Namba Yasaka", kanji: "難波八阪神社", lat: 34.6614, lng: 135.4999,
             detail: "Piccolo santuario con un palco votivo a forma di enorme testa di leone, usato per riti propiziatori.",
             long: "Il palco Ema-den, a forma di testa di leone alta 12 metri con la bocca spalancata, è pensato per 'divorare' la sfortuna e le energie negative; è uno dei santuari più fotografati di Osaka nonostante le dimensioni contenute del complesso.",
             info: [{ k: "Ingresso", v: "Gratuito" }, { k: "Durata consigliata", v: "20 – 30 min" }],
             tip: "È un santuario piccolo: perfetto da abbinare a una passeggiata verso Shinsaibashi, non richiede una visita a sé."
+          },
+          {
+            time: "11:00", icon: "🏯", cat: "Castello", title: "Castello di Osaka", kanji: "大阪城公園", lat: 34.6873, lng: 135.5262,
+            detail: "Visita al celebre castello ricostruito nel '900, circondato da un ampio parco e fossati storici.",
+            long: "Il Castello di Osaka, costruito originariamente nel 1583 da Toyotomi Hideyoshi, è stato distrutto e ricostruito più volte; l'edificio attuale, in cemento armato con ascensore interno, risale al 1931 ed ospita un museo sulla storia del castello e del suo fondatore.",
+            info: [{ k: "Ingresso castello", v: "A pagamento per il museo interno, parco gratuito" }, { k: "Durata consigliata", v: "1 – 1,5 ore" }],
+            tip: "Anche senza entrare nel museo, il parco che circonda il castello è già molto scenografico, soprattutto in questa stagione con gli aceri.",
+            official: "https://www.osakacastle.net/english/"
           },
           {
             time: "14:00", icon: "🛍️", cat: "Shopping", title: "Shinsaibashi", kanji: "心斎橋筋商店街", lat: 34.6730, lng: 135.5013,
@@ -1659,10 +1670,18 @@
             official: "https://www.abenoharukas-300.jp/en/"
           },
           {
+            time: "15:30", icon: "🌆", cat: "Panorama", title: "In alternativa: Umeda Sky Building", kanji: "梅田スカイビル", lat: 34.7053, lng: 135.4903,
+            detail: "Osservatorio panoramico a cielo aperto tra le due torri collegate, la 'Floating Garden Observatory' — un'alternativa ad Abeno Harukas dal lato opposto della città.",
+            long: "Progettato dall'architetto Hiroshi Hara, l'Umeda Sky Building è formato da due torri gemelle di 40 piani collegate in cima da un anello panoramico, il 'Floating Garden Observatory', raggiungibile con scale mobili a vista sospese tra le due torri: una delle esperienze architettoniche più particolari di Osaka. Si trova nella zona di Umeda, comoda se si preferisce restare vicini all'hotel.",
+            info: [{ k: "Ingresso", v: "A pagamento" }, { k: "Momento migliore", v: "Tramonto, per vedere sia il giorno che le luci notturne" }],
+            tip: "Restate fino a dopo il tramonto: la vista cambia completamente quando si accendono le luci della città.",
+            official: "https://www.kuchu-teien.com/en/"
+          },
+          {
             time: "19:30", icon: "🎨", cat: "Quartiere", title: "Amerikamura & Dōtonbori by night", kanji: "アメリカ村", lat: 34.6725, lng: 135.4977,
-            detail: "Cena nel quartiere giovanile di Amerikamura o passeggiata lungo i canali illuminati di Dōtonbori.",
-            long: "Amerikamura ('villaggio americano') è nato negli anni '70 come zona di negozi di importazione di moda e dischi americani, ed è oggi il quartiere di riferimento per streetwear, vintage e street art di Osaka, molto vivace la sera.",
-            info: [{ k: "Ingresso", v: "Libero" }, { k: "Atmosfera", v: "Giovanile, street art, negozi vintage" }],
+            detail: "Cena nel quartiere giovanile di Amerikamura o passeggiata lungo i canali illuminati di Dōtonbori — qui è il momento giusto per assaggiare takoyaki e okonomiyaki, le specialità street food di Osaka.",
+            long: "Amerikamura ('villaggio americano') è nato negli anni '70 come zona di negozi di importazione di moda e dischi americani, ed è oggi il quartiere di riferimento per streetwear, vintage e street art di Osaka, molto vivace la sera. A pochi passi, Dōtonbori con le sue insegne al neon (il celebre cartellone Glico Running Man) è il posto per eccellenza dove provare takoyaki (polpette di polpo) e okonomiyaki (frittata/pancake salato), le specialità gastronomiche di Osaka.",
+            info: [{ k: "Ingresso", v: "Libero" }, { k: "Atmosfera", v: "Giovanile, street art, negozi vintage" }, { k: "Street food", v: "Takoyaki e okonomiyaki, 800–2.000 ¥" }],
             tip: "Il Triangle Park al centro di Amerikamura è un buon punto di ritrovo e osservazione della vita notturna locale."
           }
         ]
@@ -2034,20 +2053,6 @@
     // Avvia subito e aggiorna ogni secondo
     setInterval(updateClocks, 1000);
     updateClocks();
-
-    /* ============================= AVVISO CONNESSIONE (dinamico) ============================= */
-    function updateConnectionStatus() {
-      const alertBox = document.getElementById('connAlert');
-      if (!alertBox) return;
-      if (navigator.onLine === false) {
-        alertBox.classList.add('show');
-      } else {
-        alertBox.classList.remove('show');
-      }
-    }
-    window.addEventListener('online', updateConnectionStatus);
-    window.addEventListener('offline', updateConnectionStatus);
-    updateConnectionStatus();
   </script>
 </body>
 
