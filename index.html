@@ -219,6 +219,8 @@
     }
 
     .leaflet-marker-pin.alt { background: var(--ginkgo); }
+    .leaflet-marker-pin.hotel { background: #1f3a5f; width: 32px; height: 32px; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+    .leaflet-marker-pin.hotel span { font-size: 15px; }
 
     .leaflet-marker-pin span { transform: rotate(45deg); color: #fff; font-size: 11px; font-weight: 700; }
 
@@ -696,7 +698,7 @@
 
     <div class="map-wrap">
       <div id="map"></div>
-      <div class="map-legend">🍁 <span>Tappe di oggi, in ordine</span></div>
+      <div class="map-legend">🍁 <span>Tappe di oggi, in ordine · 🏨 hotel di partenza e rientro</span></div>
     </div>
 
     <div class="timeline" id="timeline"></div>
@@ -1146,25 +1148,25 @@
       },
       {
         date: "2026-11-16", dow: "Lun", num: "16", city: "Kyoto", title: "Trasferimento a Kyoto, Kimono con Maikoya & Shabu-Shabu da Izumoya",
-        note: "🚄 Shinkansen Tokyo → Kyoto (~2h15). Check-out Tavinos entro le 11:00. Check-in <b>Oyado Kawaramachi Gojo</b> dalle 15:00 alle 22:00.",
+        note: "🚄 Shinkansen <b>NOZOMI 65</b> Tokyo 09:48 → Kyoto 12:00 (prenotato). Check-out Tavinos entro le 11:00. Check-in <b>Oyado Kawaramachi Gojo</b> dalle 15:00 alle 22:00.",
         stops: [
           {
-            time: "08:30", icon: "🚄", cat: "Trasporto", title: "Shinkansen per Kyoto", kanji: "東京駅 (新幹線)", lat: 35.6812, lng: 139.7671, maps: "Tokyo Station",
-            detail: "Check-out dal Tavinos e partenza dalla Stazione di Tokyo con lo Shinkansen Nozomi: circa 2 ore e 15 minuti fino a Kyoto.",
+            time: "09:48", icon: "🚄", cat: "Trasporto", title: "Shinkansen per Kyoto (NOZOMI 65)", kanji: "東京駅 (新幹線)", lat: 35.6812, lng: 139.7671, maps: "Tokyo Station",
+            detail: "Check-out dal Tavinos verso le 08:45 e partenza dalla Stazione di Tokyo alle 09:48 con il NOZOMI 65 (prenotato), arrivo a Kyoto alle 12:00. Pranzo a bordo con l'ekiben.",
             long: "Lo Shinkansen Tokaido, in servizio dal 1964, viaggia a oltre 280 km/h ed è il modo più comodo e puntuale per attraversare il Giappone centrale. Nelle giornate limpide, uscendo da Tokyo, si vede il Monte Fuji sul lato destro.",
-            info: [{ k: "Durata", v: "~2h15 (Nozomi)" }, { k: "Posto consigliato", v: "Fila E, lato destro, per il Fuji" }, { k: "Valigie grandi", v: "Oltre 160 cm (L+A+P) serve il posto con spazio bagagli prenotato" }],
-            tip: "Con valigie grandi prenotate i posti 'con spazio bagagli' (ultima fila della carrozza). Comprate un bento (ekiben) in stazione prima di salire.",
+            info: [{ k: "Treno", v: "NOZOMI 65 · 09:48 → 12:00" }, { k: "Biglietti", v: "smartEX (account Sara), QR code ai tornelli" }, { k: "Posti", v: "Da scegliere dopo il 16/10: D-E, lato Fuji" }, { k: "Valigie grandi", v: "Oltre 160 cm (L+A+P) serve il posto con spazio bagagli prenotato" }],
+            tip: "Con valigie grandi prenotate i posti 'con spazio bagagli' (ultima fila della carrozza). Ekiben per il pranzo da Ekibenya Matsuri, dentro la stazione di Tokyo (aperto dalle 5:30): arrivate 30-40 minuti prima.",
             official: "https://global.jr-central.co.jp/en/"
           },
           {
-            time: "11:30", icon: "🛌", cat: "Alloggio", title: "Deposito bagagli — Oyado Kawaramachi Gojo", kanji: "京都市 若宮町477\n御宿 河原町五条", lat: 34.9965, lng: 135.7660, maps: "Oyado Kawaramachi Gojo Kyoto", hotel: 1,
+            time: "12:30", icon: "🛌", cat: "Alloggio", title: "Deposito bagagli — Oyado Kawaramachi Gojo", kanji: "京都市 若宮町477\n御宿 河原町五条", lat: 34.9965, lng: 135.7660, maps: "Oyado Kawaramachi Gojo Kyoto", hotel: 1,
             detail: "Dalla stazione di Kyoto in taxi (~10 min) o in metro/bus fino a Kawaramachi-Gojō. Si lasciano i bagagli prima del check-in delle 15:00.",
             long: "L'Oyado Kawaramachi Gojo è un appartamento con reception, comodo per Gion, Kiyomizu e Pontochō. Le chiavi e il codice elettronico si ricevono alla reception. La struttura chiede di comunicare in anticipo l'orario di arrivo.",
             info: [{ k: "Check-in", v: "15:00 – 22:00" }, { k: "Check-out", v: "Entro le 10:00" }, { k: "Telefono", v: "+81 50-5433-6658" }, { k: "Sistemazione", v: "Appartamento Deluxe per 4" }],
             tip: "Scrivete all'host tramite Booking per confermare che si possono lasciare i bagagli in mattinata; in alternativa ci sono gli armadietti della stazione di Kyoto."
           },
           {
-            time: "13:30", icon: "👘", cat: "Esperienza", title: "Kimono & Cerimonia del Tè da Maikoya", kanji: "舞妓や (MAIKOYA)", lat: 34.9990, lng: 135.7790, maps: "Maikoya Kyoto Gion",
+            time: "14:00", icon: "👘", cat: "Esperienza", title: "Kimono & Cerimonia del Tè da Maikoya (da decidere)", kanji: "舞妓や (MAIKOYA)", lat: 34.9990, lng: 135.7790, maps: "Maikoya Kyoto Gion",
             detail: "Esperienza tradizionale da Maikoya: vestizione di un kimono e partecipazione a un'autentica cerimonia del tè (Sadō), prima di passeggiare verso Higashiyama.",
             long: "Maikoya è uno degli studi più conosciuti di Kyoto per esperienze culturali guidate: noleggio kimono con assistenza per la vestizione e cerimonia del tè, un rituale codificato da secoli in cui ogni gesto ha un significato preciso legato ai principi di armonia, rispetto, purezza e tranquillità. Indossare il kimono prima di visitare i templi di Higashiyama rende l'esperienza ancora più immersiva.",
             info: [{ k: "Prenotazione", v: "Sito Maikoya o Klook/Viator, 1-2 mesi prima" }, { k: "Restituzione kimono", v: "Verificare l'orario (spesso entro le 17:00-18:00)" }, { k: "Durata cerimonia", v: "30 – 45 min" }],
@@ -1261,22 +1263,44 @@
             official: "https://www.tenryuji.com/en/"
           },
           {
-            time: "10:30", icon: "🌉", cat: "Panorama", title: "Ponte Togetsukyō & pranzo ad Arashiyama", kanji: "渡月橋", lat: 35.0130, lng: 135.6778, maps: "Togetsukyo Bridge",
-            detail: "Passeggiata lungo il fiume Katsura fino al ponte Togetsukyō, con le colline colorate sullo sfondo, e pranzo nella via principale (tofu yudōfu e soba sono le specialità).",
+            time: "10:00", icon: "🌉", cat: "Panorama", title: "Ponte Togetsukyō", kanji: "渡月橋", lat: 35.0130, lng: 135.6778, maps: "Togetsukyo Bridge",
+            detail: "Passeggiata lungo il fiume Katsura fino al ponte Togetsukyō, con le colline colorate sullo sfondo. Attraversato il ponte, si sale al Monkey Park.",
             long: "Il ponte Togetsukyō ('ponte che attraversa la luna') è il simbolo di Arashiyama fin dal periodo Heian. Con le montagne di aceri alle spalle è uno degli scorci autunnali più classici di Kyoto. Nella zona il piatto tipico è lo yudōfu, tofu caldo cotto in brodo, retaggio della cucina dei templi zen.",
             info: [{ k: "Ingresso", v: "Libero" }, { k: "Specialità", v: "Yudōfu, soba, dolci al matcha" }],
-            tip: "Per il pranzo evitate l'ora di punta mettendovi in fila verso le 11:30."
+            tip: "La foto classica è dalla riva nord, con il ponte e la montagna Arashiyama alle spalle."
+          },
+          {
+            time: "10:20", icon: "🐒", cat: "Natura", title: "Monkey Park Iwatayama", kanji: "嵐山モンキーパークいわたやま", lat: 35.0096, lng: 135.6773, maps: "Arashiyama Monkey Park Iwatayama",
+            detail: "Parco sulla collina subito oltre il ponte Togetsukyō, con circa 120 macachi giapponesi liberi e una vista panoramica su tutta Kyoto. In cima si danno da mangiare alle scimmie dalla casetta con la rete.",
+            long: "Il parco è sul monte Arashiyama, sulla riva sud del fiume Katsura. Dopo una salita di circa 20 minuti si arriva a una radura a 160 metri di quota dove le scimmie girano libere. Al contrario di uno zoo, qui sono le persone a stare 'in gabbia': nella casetta si compra il cibo e lo si porge alle scimmie attraverso la rete. Dalla radura si vede tutta Kyoto, e a novembre la collina è coperta di aceri rossi.",
+            info: [{ k: "Ingresso", v: "~¥800, solo contanti" }, { k: "Orario", v: "9:00 – 16:00 (ultimo ingresso)" }, { k: "Salita", v: "~20 min a piedi, ripida, senza funivia" }, { k: "Durata consigliata", v: "~1 ora e 15 in tutto" }],
+            tip: "Non toccate e non fissate negli occhi le scimmie, tenete zaini chiusi e cibo nascosto: si nutrono solo dalla casetta in cima. Scarpe comode per la salita."
+          },
+          {
+            time: "11:45", icon: "🍜", cat: "Cibo", title: "Pranzo ad Arashiyama", kanji: "嵐山 湯豆腐", lat: 35.0157, lng: 135.6778, maps: "Arashiyama Main Street restaurants",
+            detail: "Pranzo nella via principale di Arashiyama: yudōfu (tofu caldo), soba e dolci al matcha sono le specialità. Poi 10-15 minuti a piedi fino alla stazione Torokko Saga.",
+            long: "Arashiyama è famosa per lo yudōfu, il tofu bollito servito in una pentola di terracotta, piatto della tradizione dei templi zen della zona. Lungo la strada principale ci sono anche molti chioschi di street food e dolci al matcha.",
+            info: [{ k: "Specialità", v: "Yudōfu, soba, matcha" }, { k: "Per il trenino", v: "Torokko Saga a 10-15 min a piedi" }],
+            tip: "Alle 11:45 c'è già fila: in alternativa street food lungo la via principale, così arrivate al trenino con calma."
           },
           {
             time: "13:00", icon: "🚂", cat: "Esperienza", title: "Sagano Romantic Train", kanji: "嵯峨野トロッコ列車 トロッコ嵯峨駅", lat: 35.0185, lng: 135.6806, maps: "Torokko Saga Station",
             detail: "Trenino panoramico da Torokko Saga a Torokko Kameoka lungo le gole del fiume Hozu, tra colline colorate dal Momiji.",
             long: "Il trenino riutilizza un vecchio tracciato ferroviario e percorre circa 7 km lungo le gole del fiume Hozugawa in circa 25 minuti, a bassa velocità, per godersi il panorama: in autunno le pareti della gola si accendono di rosso e arancio. Un vagone è completamente aperto.",
-            info: [{ k: "Durata tragitto", v: "~25 minuti, sola andata" }, { k: "Biglietto", v: "880 ¥, posti tutti assegnati" }, { k: "Partenze", v: "Ogni ora circa, 9:00–16:00" }, { k: "Giorno di chiusura", v: "Mercoledì, salvo alta stagione" }],
-            tip: "Al ritorno da Kameoka si può scendere in barca sul fiume Hozu (Hozugawa Kudari, ~2 ore, fino ad Arashiyama) oppure prendere la JR da Umahori. Verificate gli orari della barca, l'ultima parte nel primo pomeriggio.",
+            info: [{ k: "Durata tragitto", v: "~25 minuti, sola andata" }, { k: "Biglietto", v: "880 ¥, posti tutti assegnati" }, { k: "Partenze", v: "Ogni ora circa, 9:00–16:00" }, { k: "Giorno di chiusura", v: "Mercoledì, salvo alta stagione" }, { k: "Rientro", v: "A piedi a JR Umahori (10 min) → JR fino a Uzumasa (~15 min)" }],
+            tip: "🚃 Rientro: il trenino è solo andata. Da Torokko Kameoka 10 minuti a piedi fino alla stazione JR Umahori (馬堀駅), poi JR Sagano Line direzione Kyoto fino a Uzumasa (太秦駅, ~15 min, ~¥200, con la Suica): da lì Eigamura è a circa 10-15 minuti a piedi (seguite le indicazioni 映画村). In alternativa scendete a Saga-Arashiyama e prendete il Randen fino a Uzumasa-Kōryūji, a 5 minuti dall'ingresso. Piano: 13:00 trenino → 13:30 a piedi a Umahori → ~14:00 JR per Uzumasa. In alternativa: barca sul fiume Hozu (~2 ore, ~¥6.000) o trenino anche al ritorno (¥880).",
             official: "https://www.sagano-kanko.co.jp/en/"
           },
           {
-            time: "19:00", icon: "🍜", cat: "Cibo", title: "Rientro e cena a Kyoto centro", kanji: "河原町", lat: 35.0037, lng: 135.7680, maps: "Pontocho Kyoto",
+            time: "17:00", icon: "👹", cat: "Esperienza", title: "Kaikai YOKAI Festival a Toei Uzumasa Eigamura", kanji: "東映太秦映画村 怪々YOKAI祭", lat: 35.0166, lng: 135.7088, maps: "Toei Kyoto Studio Park",
+            detail: "Serata nel parco tematico del cinema di Kyoto, trasformato fino al 29/11 nel villaggio degli yōkai. Nei giorni feriali c'è lo Yōkai Greeting: gli yōkai girano per il parco alle 16:30, 17:30, 18:30 e 19:30. 🚉 Da Saga-Arashiyama a Hanazono (JR) o con il Randen fino a Uzumasa-Kōryūji, ~10 min.",
+            long: "Toei Uzumasa Eigamura è il parco degli studi cinematografici dove si girano i film in costume di epoca Edo. Per il Kaikai YOKAI Festival le sue strade di legno si popolano di yōkai, le creature del folklore giapponese: donne dal collo lunghissimo (rokurokubi), ombrelli con un occhio solo (kasa-obake), volpi magiche (kitsune), demoni con le corna (oni), interpretati da attori in costume e trucco teatrale tra lanterne e scenografie spettrali. Le vere parate (KAIKAI YOKAI PARADE alle 17:30 e Uzumasa Hyakki Yakō alle 19:30) si tengono solo nel weekend e nei festivi; il mercoledì ci sono gli incontri con gli yōkai nel parco.",
+            info: [{ k: "Biglietto serale", v: "2.000 ¥ (ingresso dalle 17:00), 3.000 ¥ con gadget" }, { k: "Yōkai Greeting", v: "16:30, 17:30, 18:30, 19:30" }, { k: "Orario", v: "Fino alle 21:00" }, { k: "Prenotazione", v: "Non necessaria, biglietto sul posto" }],
+            tip: "L'ingresso Satsueisho chiude alle 17:00: per la sera usate l'ingresso principale. Le parate vere sono solo nel weekend, quindi stasera è una visita più tranquilla.",
+            official: "https://en.eigamura.com/feature/yokai2026/"
+          },
+          {
+            time: "19:45", icon: "🍜", cat: "Cibo", title: "Rientro e cena a Kyoto centro", kanji: "河原町", lat: 35.0037, lng: 135.7680, maps: "Pontocho Kyoto",
             detail: "Cena in centro dopo la giornata ad Arashiyama. Stasera preparate la valigia da spedire a Osaka domattina.",
             long: "Il centro di Kyoto (Kawaramachi, Gion) offre ampia scelta per la cena, dai ristoranti di cucina kyotese tradizionale (obanzai) ai locali più informali.",
             info: [{ k: "Prezzo medio", v: "1.500 – 4.000 ¥" }],
@@ -1408,8 +1432,8 @@
             time: "15:30", icon: "🌆", cat: "Panorama", title: "Abeno Harukas", kanji: "あべのハルカス", lat: 34.6459, lng: 135.5133, maps: "Abeno Harukas 300",
             detail: "Osservatorio panoramico su uno dei grattacieli più alti del Giappone. 🚇 Namba → Tennōji ~10 min.",
             long: "Con i suoi 300 metri, Abeno Harukas è stato a lungo l'edificio più alto del Giappone. L'osservatorio 'Harukas 300' occupa gli ultimi piani e offre una vista a 360° su tutta l'area urbana di Osaka, fino alle montagne nelle giornate limpide.",
-            info: [{ k: "Ingresso", v: "A pagamento" }, { k: "Durata consigliata", v: "45 min – 1 ora" }, { k: "Tramonto", v: "Verso le 16:50" }],
-            tip: "C'è anche una terrazza scoperta al piano dell'osservatorio: se non soffrite di vertigini, uscite anche lì.",
+            info: [{ k: "Ingresso", v: "¥2.000 in cassa (16° piano), ~¥1.700–1.800 online" }, { k: "Durata consigliata", v: "45 min – 1 ora" }, { k: "Tramonto", v: "Verso le 16:50" }, { k: "Orario", v: "9:00 – 22:00 (ultimo ingresso 21:30)" }],
+            tip: "Di sabato al tramonto la coda in biglietteria è lunga: comprate il biglietto online qualche giorno prima e al 16° piano mostrate il QR. C'è anche una terrazza scoperta: se non soffrite di vertigini, uscite anche lì. È l'unica torre a pagamento del viaggio.",
             official: "https://www.abenoharukas-300.jp/en/"
           },
           {
@@ -1431,13 +1455,13 @@
       },
       {
         date: "2026-11-22", dow: "Dom", num: "22", city: "Tokyo · Mitaka", title: "Rientro a Tokyo & Museo Ghibli",
-        note: "🎬 <b>Museo Ghibli prenotato: ingresso 15:00–16:00, 2 persone</b> (Sara, capogruppo, e Donatella). Servono il passaporto di Sara e lo smartphone con internet per i biglietti elettronici. 🚄 Shin-Osaka → Tokyo (~2h30). Check-in <b>Henn na Hotel Akasaka</b> dalle 15:00.",
+        note: "🎬 <b>Museo Ghibli prenotato: ingresso 15:00–16:00, 2 persone</b> (Sara, capogruppo, e Donatella). Servono il passaporto di Sara e lo smartphone con internet per i biglietti elettronici. 🚄 <b>NOZOMI 86</b> Shin-Osaka 09:33 → Tokyo 12:03 (prenotato). Check-in <b>Henn na Hotel Akasaka</b> dalle 15:00.",
         stops: [
           {
-            time: "09:30", icon: "🚄", cat: "Trasporto", title: "Shinkansen per Tokyo", kanji: "新大阪駅 (新幹線)", lat: 34.7338, lng: 135.5000, maps: "Shin-Osaka Station",
-            detail: "Check-out dal KOKO HOTEL entro le 11:00 e Shinkansen da Shin-Osaka a Tokyo. Con il treno delle 09:30 si arriva verso le 12:00. 🚇 Umeda → Shin-Osaka ~10 min.",
+            time: "09:33", icon: "🚄", cat: "Trasporto", title: "Shinkansen per Tokyo (NOZOMI 86)", kanji: "新大阪駅 (新幹線)", lat: 34.7338, lng: 135.5000, maps: "Shin-Osaka Station",
+            detail: "Check-out dal KOKO HOTEL verso le 08:45 e NOZOMI 86 da Shin-Osaka alle 09:33 (prenotato), arrivo a Tokyo alle 12:03. 🚇 Umeda → Shin-Osaka ~10 min.",
             long: "Il tratto Shin-Osaka–Tokyo, circa 2 ore e 30 minuti con il Nozomi, è lo stesso percorso della prima linea Shinkansen del 1964. Oggi conviene non prendere treni più tardi delle 10:00, per arrivare a Mitaka con calma.",
-            info: [{ k: "Durata", v: "~2h30" }, { k: "Treno consigliato", v: "Nozomi delle 09:30 o prima" }, { k: "Posto per il Fuji", v: "Fila E (lato montagna)" }],
+            info: [{ k: "Durata", v: "~2h30" }, { k: "Treno", v: "NOZOMI 86 · 09:33 → 12:03 (prenotato)" }, { k: "Posto per il Fuji", v: "Fila E (lato montagna)" }],
             tip: "Il Monte Fuji si vede dai posti E, sul lato montagna (verso Tokyo è il lato sinistro), tra Shizuoka e Shin-Fuji.",
             official: "https://global.jr-central.co.jp/en/"
           },
@@ -1464,11 +1488,11 @@
             tip: "Se le altre due vi raggiungono qui, è un buon punto d'incontro per l'ultima cena in Giappone."
           },
           {
-            time: "14:00", alt: true, icon: "⛩️", cat: "Tempio", title: "Per chi non va al Ghibli: Hie Jinja & viale dei ginkgo", kanji: "日枝神社 / 明治神宮外苑 いちょう並木", lat: 35.6748, lng: 139.7395, maps: "Hie Shrine Akasaka",
-            detail: "Programma per Elisa e Matteo: il santuario Hie Jinja con la scalinata di torii rossi, a pochi minuti dall'hotel, poi il viale dei ginkgo di Gaien, che a fine novembre è di solito al picco.",
-            long: "Hie Jinja, antico protettore del castello di Edo, è incastonato tra i grattacieli di Akasaka. Il viale Icho Namiki di Gaien raggiunge in genere il giallo pieno proprio a fine novembre, spesso con il Festival dei Ginkgo e le sue bancarelle.",
-            info: [{ k: "Ingresso", v: "Gratuito" }, { k: "Hotel → Gaien", v: "~20 min a piedi" }],
-            tip: "Da Gaien si arriva a piedi a Tokyo Midtown e Roppongi in circa 20 minuti.",
+            time: "14:00", alt: true, icon: "⛩️", cat: "Tempio", title: "Per chi non va al Ghibli: Hie Jinja 🐒 & viale dei ginkgo", kanji: "日枝神社 / 明治神宮外苑 いちょう並木", lat: 35.6748, lng: 139.7395, maps: "Hie Shrine Akasaka",
+            detail: "Programma per Elisa e Matteo: il santuario Hie Jinja, il santuario delle scimmie, con la scalinata di torii rossi a pochi minuti dall'hotel, poi il viale dei ginkgo di Gaien, che a fine novembre è di solito al picco.",
+            long: "Hie Jinja, antico protettore del castello di Edo, è incastonato tra i grattacieli di Akasaka. 🐒 Bonus scimmie: qui i guardiani all'ingresso non sono volpi o cani-leone, ma due statue di scimmie, messaggere del dio Sannō. La mamma con il piccolo porta fortuna per famiglia e parto, il papà protegge dai malanni e porta successo nel lavoro: si accarezzano per buon augurio. Le scimmie compaiono anche sugli omamori (amuleti) e sulle tavolette votive ema. Il viale Icho Namiki di Gaien raggiunge in genere il giallo pieno proprio a fine novembre, spesso con il Festival dei Ginkgo e le sue bancarelle.",
+            info: [{ k: "Ingresso", v: "Gratuito" }, { k: "Da vedere", v: "🐒 Statue delle scimmie guardiane, torii rossi" }, { k: "Hotel → Gaien", v: "~20 min a piedi" }],
+            tip: "Bonus scimmie: cercate le due statue ai lati del santuario principale e l'omamoro con la scimmietta, un bel ricordo. Da Gaien si arriva a piedi a Tokyo Midtown e Roppongi in circa 20 minuti.",
             official: "https://www.hiejinja.net/"
           },
           {
@@ -1554,7 +1578,7 @@
       "2026-11-15": "teamLab è al coperto; al posto di Hama Rikyu, depachika e grandi magazzini di Ginza.",
       "2026-11-16": "Kimono con la pioggia è scomodo: chiedete a Maikoya se si può tenere solo la cerimonia del tè. Kiyomizu-dera con la nebbia resta molto suggestivo.",
       "2026-11-17": "Fushimi Inari si fa anche sotto la pioggia (meno folla); il Palazzo Ninomaru di Nijō è al coperto. Al posto di Kinkaku-ji: mercato coperto di Nishiki.",
-      "2026-11-18": "Il Sagano Train circola anche con la pioggia (vagoni chiusi). Al posto della foresta di bambù: Kyoto Railway Museum o il mercato di Nishiki; saltate la barca sul fiume Hozu.",
+      "2026-11-18": "Il Sagano Train circola anche con la pioggia (vagoni chiusi). Al posto della foresta di bambù: Kyoto Railway Museum o il mercato di Nishiki; saltate la barca sul fiume Hozu. Il Monkey Park può chiudere con il maltempo e il sentiero diventa scivoloso: in caso, sostituitelo con una pausa al coperto ad Arashiyama.",
       "2026-11-19": "I templi di Takao con la pioggia sono bellissimi ma le scale sono scivolose: fate solo Jingo-ji e arrivate prima al ryokan.",
       "2026-11-20": "Byōdō-in e Tōdai-ji vanno bene anche con la pioggia; riducete il parco di Nara e aggiungete il Museo Nazionale di Nara.",
       "2026-11-21": "Shinsaibashi e Dōtonbori hanno gallerie coperte; al posto del castello: Osaka Museum of Housing and Living (case di epoca Edo ricostruite al coperto).",
@@ -1565,28 +1589,31 @@
 
     /* ============================= PRENOTAZIONI ============================= */
     const BOOKINGS = [
-      { id: "ghibli", when: "✅ Fatto (sab 10 ottobre)", name: "🎬 Museo Ghibli — dom 22/11 ore 15:00, 2 persone", how: "Prenotazione confermata da Lawson Ticket (email \"Notification of Completed Payment and Booking\"). Capogruppo Sara: al museo servono il suo passaporto e lo smartphone con internet. Il link ai biglietti arriverà con l'email \"Notification of Ticket Display Start\": salvarlo nei preferiti. Il 13/11 il museo è chiuso per manutenzione.", link: "https://l-tike.com/st1/ghibli-en-2/mypage" },
-      { id: "teamlab", urgent: true, when: "Subito (già in vendita)", name: "🖼️ teamLab Planets — dom 15/11 ore 11:00", how: "Sito ufficiale, biglietto a orario fisso. Domenica a novembre: i biglietti della mattina finiscono presto.", link: "https://planets.teamlab.art/tokyo/" },
-      { id: "maikoya", urgent: true, when: "Subito", name: "👘 Maikoya kimono + cerimonia del tè — lun 16/11 ore 13:30", how: "Sito Maikoya (o Klook/Viator). Chiedete l'orario di restituzione del kimono.", link: "https://mai-ko.com/what-to-do-in-japan/kyoto/" },
+      { id: "ghibli", done: true, when: "✅ Fatto (sab 10 ottobre)", name: "🎬 Museo Ghibli — dom 22/11 ore 15:00, 2 persone", how: "Prenotazione confermata da Lawson Ticket (email \"Notification of Completed Payment and Booking\"). Capogruppo Sara: al museo servono il suo passaporto e lo smartphone con internet. Il link ai biglietti arriverà con l'email \"Notification of Ticket Display Start\": salvarlo nei preferiti. Il 13/11 il museo è chiuso per manutenzione.", link: "https://l-tike.com/st1/ghibli-en-2/mypage" },
+      { id: "teamlab", done: true, when: "✅ Fatto (dom 11 ottobre)", name: "🖼️ teamLab Planets — dom 15/11 ore 11:00, 4 adulti", how: "Prenotati sul Ticket Store ufficiale (¥22.400). QR code nella mail di conferma: si possono distribuire alle altre. Data/ora modificabili fino a 3 volte, non rimborsabili. Pantaloni da arrotolare sopra il ginocchio.", link: "https://planets.teamlab.art/tokyo/" },
+      { id: "maikoya", when: "Da decidere", name: "👘 Maikoya kimono + cerimonia del tè — lun 16/11 (meglio 14:00–14:30)", how: "Escluso dai pagamenti dell'11/10: decidere se farlo. Con il treno che arriva a Kyoto alle 12:00 e le valigie da lasciare all'Oyado, le 13:30 sono strette: meglio 14:00–14:30. Sito Maikoya (sconto online con coupon); chiedete l'orario di restituzione del kimono.", link: "https://mai-ko.com/what-to-do-in-japan/kyoto/" },
       { id: "izumoya", urgent: true, when: "Subito", name: "🍲 Cena da Izumoya (Pontochō) — lun 16/11 ore 19:00, 4 persone", how: "Telefono +81 75-211-2501 oppure online con byFood o AutoReserve. Chiedete lo shabu-shabu e un tavolo vista fiume.", link: "https://www.byfood.com/restaurant/izumoya-7096" },
-      { id: "cruise", when: "Subito (aperto dal 1° ottobre)", name: "⛴️ Tokyo Cruise Asakusa → Odaiba — sab 14/11 ~14:30", how: "Prenotazione online sul sito Tokyo Cruise, carta di credito, e-ticket via email. Himiko e Hotaluna hanno pochi posti. Il numero di persone non si può cambiare dopo.", link: "https://www.suijobus.co.jp/en/" },
-      { id: "shinkansen", when: "Subito o nelle prossime settimane", name: "🚄 Shinkansen Tokyo → Kyoto (16/11) e Shin-Osaka → Tokyo (22/11)", how: "App/sito smartEX (accetta carte estere, prenotabile fino a 1 anno prima, cambi gratuiti prima della partenza). Valigie oltre 160 cm (L+A+P): servono i posti con spazio bagagli, che si prenotano più a ridosso.", link: "https://smart-ex.jp/en/" },
-      { id: "samurai", when: "1–2 settimane prima", name: "🗡️ Samurai Ninja Museum Tokyo (Asakusa) — gio 12/11 ore 13:30", how: "Online sul sito Maikoya. Tour ogni 15 minuti, ma l'orario va fissato. Alternativa: sede di Shinjuku (Maikoya).", link: "https://mai-ko.com/samurai/" },
-      { id: "sagano", urgent: true, when: "Sab 17 ottobre · ore 17:00 italiane", name: "🚂 Sagano Romantic Train — mer 18/11 ore 13:00", how: "Le prenotazioni online aprono 1 mese prima alla mezzanotte giapponese. Prima controllate che il 18 il treno circoli (di solito non c'è il mercoledì, salvo alta stagione). Scegliete se possibile la carrozza aperta n. 5.", link: "https://www.sagano-kanko.co.jp/en/" },
+      { id: "cruise", when: "Da decidere (prenotabile anche al molo)", name: "⛴️ Tokyo Cruise Asakusa → Odaiba — sab 14/11 ~14:30", how: "Prenotazione online sul sito Tokyo Cruise, carta di credito, e-ticket via email. Himiko e Hotaluna hanno pochi posti. Il numero di persone non si può cambiare dopo.", link: "https://www.suijobus.co.jp/en/" },
+      { id: "shinkansen", done: true, when: "✅ Fatto (dom 11 ottobre)", name: "🚄 Shinkansen: lun 16/11 NOZOMI 65 Tokyo 09:48 → Kyoto 12:00 · dom 22/11 NOZOMI 86 Shin-Osaka 09:33 → Tokyo 12:03", how: "Prenotati su smartEX (account Sara), 4 adulti, ¥55.880 + ¥58.880. Treno e posti diventano definitivi il 16/10 e il 22/10 (mail JR): poi scegliere i posti D-E in entrambe le tratte (la fila E è sempre sul lato Fuji), o posti con area bagagli se una valigia supera 160 cm. Ai tornelli: QR code smartEX.", link: "https://smart-ex.jp/en/" },
+      { id: "samurai", done: true, when: "✅ Fatto (dom 11 ottobre)", name: "🗡️ Samurai Ninja Museum Tokyo (Asakusa) — gio 12/11 ore 13:30, 4 adulti", how: "Prenotato sul sito Maikoya con coupon online del 10% (¥11.880). Indirizzo: Asakusa 1-8-13, a pochi minuti dal Sensō-ji. Conferma via email.", link: "https://mai-ko.com/samurai/" },
+      { id: "sagano", urgent: true, when: "Sab 17 ottobre · ore 17:00 italiane", name: "🚂 Sagano Romantic Train — mer 18/11 ore 13:00 (sola andata Saga → Kameoka)", how: "Le prenotazioni online aprono 1 mese prima alla mezzanotte giapponese. Basta la sola andata: il rientro si fa in JR da Umahori a Uzumasa (per Eigamura). Prima controllate che il 18 il treno circoli (di solito non c'è il mercoledì, salvo alta stagione). Scegliete se possibile la carrozza aperta n. 5.", link: "https://www.sagano-kanko.co.jp/en/" },
       { id: "hotels", when: "Entro fine ottobre", name: "🏨 Comunicare orari d'arrivo agli alloggi", how: "Via Booking: Oyado (deposito bagagli 16/11 mattina?), KOKO (valigie in arrivo il 20/11 col takkyūbin), Henn na (arrivo 22/11), ryokan Momijiya (arrivo ~15:30, cena inclusa).", link: "https://www.booking.com/" },
       { id: "vjw", when: "Prima della partenza", name: "🛂 Visit Japan Web", how: "Registrare i 4 passaporti e i dati del volo LH4924: si ottiene il QR per immigrazione e dogana.", link: "https://www.vjw.digital.go.jp/" },
       { id: "checkin", when: "Mar 10 novembre · dalle 07:05", name: "✈️ Check-in online Lufthansa", how: "Si apre 23 ore prima del volo delle 06:05. Completare i dati API (passaporto) e scegliere i posti.", link: "https://www.lufthansa.com/" },
-      { id: "nobook", when: "Nessuna prenotazione", name: "ℹ️ Senza prenotazione", how: "Castello di Nijō, Byōdō-in, Kiyomizu-dera ed Eikandō (anche le aperture serali), Tōdai-ji, Castello di Osaka, Abeno Harukas, osservatorio TMG: biglietto sul posto.", link: "" }
+      { id: "abeno", when: "Qualche giorno prima (facoltativo)", name: "🌆 Abeno Harukas 300 — sab 21/11 ore 15:30, 4 persone", how: "Non obbligatorio, ma di sabato al tramonto la fila alla cassa è lunga: comprando online (Klook/WAUG, ~¥1.700–1.800 invece di ¥2.000) si salta la coda. Al 16° piano si mostra il QR. Orario 9:00–22:00.", link: "" },
+      { id: "axa", urgent: true, when: "Lun 12 ottobre (Sara)", name: "🛡️ Assicurazione viaggio AXA annuale", how: "133,39 € con sconto aziendale. Destinazione 'Mondo intero esclusi USA, Canada, Messico', inizio entro l'11/11. Salvare il numero della Centrale Operativa: chiamarla prima di spese mediche oltre 500 €.", link: "" },
+      { id: "ready", done: true, when: "✅ Fatto (11 ottobre, Sara)", name: "📱 eSIM, Suica e carte", how: "eSIM Ubigi illimitata 15 gg installata (accendere all'atterraggio, roaming dati solo sulla linea Giappone). Suica nel Wallet con ¥3.000 e Modalità Express. Revolut Premium in prova gratuita: disdire a inizio dicembre. Pagare sempre in JPY.", link: "" },
+      { id: "nobook", when: "Nessuna prenotazione", name: "ℹ️ Senza prenotazione", how: "Castello di Nijō, Byōdō-in, Kiyomizu-dera ed Eikandō (anche le aperture serali), Tōdai-ji, Castello di Osaka, osservatorio TMG: biglietto sul posto. Monkey Park Iwatayama (18/11): ~¥800 solo contanti. Eigamura Yokai Festival (18/11): biglietto serale ¥2.000 alla cassa, ingresso principale.", link: "" }
     ];
 
     function renderBookings() {
       let done = {};
       try { done = JSON.parse(store('jp26-book') || '{}') || {}; } catch (e) { done = {}; }
       $('bookList').innerHTML = BOOKINGS.map(b => `
-        <label class="book-card ${done[b.id] ? 'done' : ''}">
-          ${b.id === 'nobook' ? '<span style="width:18px"></span>' : `<input type="checkbox" data-b="${b.id}" ${done[b.id] ? 'checked' : ''}>`}
+        <label class="book-card ${(done[b.id] || b.done) ? 'done' : ''}">
+          ${b.id === 'nobook' ? '<span style="width:18px"></span>' : `<input type="checkbox" data-b="${b.id}" ${(done[b.id] || b.done) ? 'checked' : ''}>`}
           <div>
-            <div class="b-when ${b.urgent && !done[b.id] ? 'urgent' : ''}">${esc(b.when)}</div>
+            <div class="b-when ${b.urgent && !(done[b.id] || b.done) ? 'urgent' : ''}">${esc(b.when)}</div>
             <div class="b-name">${esc(b.name)}</div>
             <div class="b-how">${esc(b.how)}</div>
             ${b.link ? `<a href="${esc(b.link)}" target="_blank" rel="noopener">Apri il sito →</a>` : ''}
@@ -1659,12 +1686,66 @@
       }
     }
 
-    function pinIcon(label, isAlt) {
+
+    /* ================= HOTEL DI PARTENZA E ARRIVO DEL GIORNO =================
+       La prima tappa è l'hotel dove si è dormito la notte prima, l'ultima quello
+       dove si dorme la sera. Se il programma inizia/finisce già in hotel, non si duplica. */
+    const NIGHT_HOTEL = { "2026-11-12": 0, "2026-11-13": 0, "2026-11-14": 0, "2026-11-15": 0,
+      "2026-11-16": 1, "2026-11-17": 1, "2026-11-18": 1, "2026-11-19": 2,
+      "2026-11-20": 3, "2026-11-21": 3, "2026-11-22": 4 };
+
+    function prevDate(iso) {
+      const dt = new Date(iso + 'T12:00:00Z');
+      dt.setUTCDate(dt.getUTCDate() - 1);
+      return dt.toISOString().slice(0, 10);
+    }
+
+    function nearHotel(st, hi) {
+      if (!st || hi === undefined) return false;
+      if (st.hotel === hi) return true;
+      const h = HOTELS[hi];
+      const dLat = (st.lat - h.lat) * 111000, dLng = (st.lng - h.lng) * 91000;
+      return Math.sqrt(dLat * dLat + dLng * dLng) < 250;
+    }
+
+    function hotelStop(hi, kind) {
+      const h = HOTELS[hi];
+      const start = kind === 'start';
+      return {
+        time: start ? 'Partenza' : 'Sera', icon: '🏨', cat: 'Alloggio', hotel: hi, auto: true,
+        title: start ? `Partenza da ${h.name}` : `Rientro in hotel: ${h.name}`,
+        kanji: h.kanji, lat: h.lat, lng: h.lng, maps: h.maps,
+        detail: `${h.area} · ${esc(h.address)}. ${start ? 'Check-out ' + h.checkout : 'Check-in ' + h.checkin}.`,
+        long: h.note, info: [{ k: 'Check-in', v: h.checkin }, { k: 'Check-out', v: h.checkout }, { k: 'Indirizzo', v: h.address }, { k: 'Telefono', v: h.telLabel }]
+      };
+    }
+
+    const stopsCache = {};
+    function getStops(i) {
+      if (stopsCache[i]) return stopsCache[i];
+      const d = DAYS[i];
+      const list = d.stops.slice();
+      const main = list.filter(x => !x.alt);
+      const startH = NIGHT_HOTEL[prevDate(d.date)];
+      const endH = NIGHT_HOTEL[d.date];
+      if (startH !== undefined && !nearHotel(main[0], startH)) {
+        const hs = hotelStop(startH, 'start');
+        const m = /^(\d{2}):(\d{2})$/.exec(main[0] && main[0].time || '');
+        if (m) { const t = Math.max(0, parseInt(m[1]) * 60 + parseInt(m[2]) - 30); hs.time = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0'); }
+        list.unshift(hs);
+      }
+      if (endH !== undefined && !nearHotel(main[main.length - 1], endH)) list.push(hotelStop(endH, 'end'));
+      stopsCache[i] = list;
+      return list;
+    }
+
+    function pinIcon(label, isAlt, isHotel) {
+      const size = isHotel ? 32 : 26;
       return L.divIcon({
         className: '',
-        html: `<div class="leaflet-marker-pin${isAlt ? ' alt' : ''}"><span>${label}</span></div>`,
-        iconSize: [26, 26],
-        iconAnchor: [13, 26]
+        html: `<div class="leaflet-marker-pin${isAlt ? ' alt' : ''}${isHotel ? ' hotel' : ''}"><span>${label}</span></div>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size]
       });
     }
 
@@ -1672,6 +1753,7 @@
     function stopLabels(stops) {
       let n = 0;
       return stops.map(s => {
+        if (s.auto) return '🏨';
         if (s.alt) return `${Math.max(n, 1)}b`;
         n++;
         return String(n);
@@ -1705,14 +1787,21 @@
       try {
         markersLayer.clearLayers();
         const d = DAYS[current];
-        const labels = stopLabels(d.stops);
+        const stops = getStops(current);
+        const labels = stopLabels(stops);
         const route = [];
         const all = [];
-        d.stops.forEach((s, i) => {
-          const m = L.marker([s.lat, s.lng], { icon: pinIcon(labels[i], s.alt) }).addTo(markersLayer);
-          m.bindPopup(`<b>${esc(s.title)}</b>`);
+        const first = stops[0], last = stops[stops.length - 1];
+        const sameHotel = first.auto && last.auto && first.hotel === last.hotel;
+        stops.forEach((s, i) => {
           all.push([s.lat, s.lng]);
           if (!s.alt) route.push([s.lat, s.lng]);
+          if (s.auto && sameHotel && i === stops.length - 1) return; /* stesso hotel: un solo segnaposto */
+          const isHotel = !!s.auto;
+          const label = isHotel ? '🏨' : labels[i];
+          const m = L.marker([s.lat, s.lng], { icon: pinIcon(label, s.alt, isHotel), zIndexOffset: isHotel ? 1000 : 0 }).addTo(markersLayer);
+          const txt = (isHotel && sameHotel) ? `🏨 Partenza e rientro: ${esc(HOTELS[s.hotel].name)}` : esc(s.title);
+          m.bindPopup(`<b>${txt}</b>`);
         });
         if (route.length > 1) {
           L.polyline(route, { color: '#b5432f', weight: 2, dashArray: '5,7', opacity: 0.7 }).addTo(markersLayer);
@@ -1732,11 +1821,12 @@
     function renderTimeline() {
       const d = DAYS[current];
       const tl = $('timeline');
-      tl.innerHTML = d.stops.map((s, i) => `
+      const stops = getStops(current);
+      tl.innerHTML = stops.map((s, i) => `
         <div class="stop ${s.alt ? 'alt' : ''}">
           <div class="stop-rail">
             <div class="stop-dot">${s.icon}</div>
-            ${i < d.stops.length - 1 ? '<div class="stop-line"></div>' : ''}
+            ${i < stops.length - 1 ? '<div class="stop-line"></div>' : ''}
           </div>
           <div class="stop-body" data-i="${i}">
             <div class="stop-time">${esc(s.time)}${s.alt ? '<span class="alt-badge">Alternativa</span>' : ''}</div>
@@ -1767,7 +1857,7 @@
       tl.querySelectorAll('.btn-kanji').forEach(el => {
         el.addEventListener('click', (e) => {
           e.stopPropagation();
-          const s = DAYS[current].stops[parseInt(el.dataset.i)];
+          const s = getStops(current)[parseInt(el.dataset.i)];
           openKanji(s.kanji || s.title, s.title);
         });
       });
@@ -1775,7 +1865,7 @@
 
     function openDetail(stopIndex) {
       const d = DAYS[current];
-      const s = d.stops[stopIndex];
+      const s = getStops(current)[stopIndex];
       $('dIcon').textContent = s.icon;
       $('dEyebrow').textContent = `${s.cat || 'Tappa'} · ${d.city}`;
       $('dTitle').textContent = s.title;
