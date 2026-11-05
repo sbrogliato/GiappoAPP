@@ -509,6 +509,15 @@
       margin: auto 0;
     }
 
+    .kanji-display-text.long { font-size: 27px; line-height: 1.55; text-align: left; max-width: 640px; }
+    .allergy-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; font-size: 12.5px; line-height: 1.5; }
+    .allergy-card .a-title { font-family: 'Shippori Mincho', serif; font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+    .allergy-card .a-jp { font-size: 14px; color: #2b2a26; margin: 6px 0; line-height: 1.6; }
+    .allergy-card .a-it { font-size: 11.5px; color: #6b5a24; }
+    .allergy-card .h-note { margin-top: 6px; padding: 6px 8px; background: #faf3e2; border-radius: 6px; font-size: 11.5px; color: #6b5a24; }
+    .phrase-row { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
+    .phrase-row .jp { font-size: 14px; font-weight: 700; color: #2b2a26; }
+    .phrase-row .ro { color: #9a9078; font-size: 11px; }
     .kanji-sub-text { font-size: 18px; color: #fff; margin-bottom: 20px; font-weight: 500; line-height: 1.4; }
 
     .kanji-close-btn {
@@ -689,6 +698,7 @@
         <button class="tool-btn" id="openHotelsBtn">🏨 Alloggi</button>
         <button class="tool-btn" id="openBookBtn">📋 Prenotazioni</button>
         <button class="tool-btn" id="openCalcBtn">🧮 Cambio ¥ / €</button>
+        <button class="tool-btn" id="openAllergyBtn">🍽️ Allergie</button>
       </div>
     </div>
 
@@ -739,7 +749,7 @@
 
   <!-- SCHERMATA KANJI A SCHERMO INTERO -->
   <div class="kanji-modal" id="kanjiModal">
-    <div class="kanji-header-note">🚖 Mostra questo schermo al tassista o ai passanti:</div>
+    <div class="kanji-header-note" id="kanjiNote">🚖 Mostra questo schermo al tassista o ai passanti:</div>
     <div class="kanji-display-text" id="kanjiText">---</div>
     <div class="kanji-sub-text" id="kanjiSub">---</div>
     <button class="kanji-close-btn" id="kanjiCloseBtn">✕ Chiudi</button>
@@ -889,6 +899,16 @@
       <h3 class="calc-title">📋 Da prenotare</h3>
       <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Orari in <b>ora italiana</b>. Fino al 25 ottobre il Giappone è 7 ore avanti, poi 8. Spunta le voci fatte: vengono ricordate su questo dispositivo.</p>
       <div id="bookList"></div>
+    </div>
+  </div>
+
+  <!-- MODALE ALLERGIE -->
+  <div class="calc-modal" id="allergyModal">
+    <div class="calc-card wide">
+      <button class="calc-close" data-close>✕</button>
+      <h3 class="calc-title">🍽️ Allergie e intolleranze</h3>
+      <p style="font-size:12px; color:#6b5a24; margin:0 0 12px; line-height:1.4;">Tocca <b>Mostra al ristorante</b> e fai leggere lo schermo al cameriere prima di ordinare. In Giappone le intolleranze si capiscono meglio se si dice che il cibo «fa stare male».</p>
+      <div id="allergyList"></div>
     </div>
   </div>
 
@@ -1988,8 +2008,10 @@
     });
 
     /* ================= KANJI ================= */
-    function openKanji(kanjiText, subText) {
+    function openKanji(kanjiText, subText, opts = {}) {
       $('kanjiText').innerHTML = esc(kanjiText).replace(/\n/g, '<br>');
+      $('kanjiText').classList.toggle('long', !!opts.long);
+      $('kanjiNote').textContent = opts.note || '🚖 Mostra questo schermo al tassista o ai passanti:';
       $('kanjiSub').textContent = subText;
       openLayer('kanjiModal');
     }
@@ -2035,6 +2057,54 @@
     $('openFlightsBtn').addEventListener('click', () => openLayer('flightsModal'));
     $('openHotelsBtn').addEventListener('click', () => openLayer('hotelsModal'));
     $('openBookBtn').addEventListener('click', () => openLayer('bookModal'));
+
+    /* ================= ALLERGIE ================= */
+    const ALLERGY_CARDS = [
+      {
+        title: "🥜 Pistacchio",
+        jp: "私はピスタチオを食べると体調が悪くなります。\nピスタチオが入っている料理・お菓子・ソースは食べられません。\nこの料理にピスタチオは入っていますか？",
+        it: "Se mangio pistacchio sto male. Non posso mangiare piatti, dolci o salse con il pistacchio. Questo piatto contiene pistacchio?",
+        note: "Nella cucina giapponese il pistacchio è raro: attenzione soprattutto a gelati, dolci occidentali, pasticcerie e mix di frutta secca. Sulle etichette non è sempre obbligatorio indicarlo."
+      },
+      {
+        title: "🥛🥚 Latticini e uova",
+        jp: "私は乳製品（牛乳・バター・チーズ・生クリーム）と卵（マヨネーズを含む）を食べると体調が悪くなります。\nこれらが入っていない料理はありますか？",
+        it: "Se mangio latticini (latte, burro, formaggio, panna) e uova (anche la maionese) sto male. Ci sono piatti senza questi ingredienti?",
+        note: "Uova nascoste: maionese, tamagoyaki (frittata), chawanmushi, oyakodon, panatura della tonkatsu, a volte la pastella della tempura e alcuni ramen. Latticini nascosti: molte basi del curry giapponese, pane dolce (melonpan), dolci e bevande «latte». Sulle etichette 卵 (uovo) e 乳 (latte) sono sempre indicati: cercali nel riquadro アレルギー."
+      }
+    ];
+    const ALLERGY_PHRASES = [
+      ["これに＿＿は入っていますか？", "Kore ni __ wa haitte imasu ka?", "Qui dentro c'è __?"],
+      ["＿＿抜きでお願いします。", "__ nuki de onegai shimasu.", "Senza __, per favore."],
+      ["入っていない料理はどれですか？", "Haitte inai ryōri wa dore desu ka?", "Quali piatti non lo contengono?"],
+      ["ピスタチオ", "pisutachio", "pistacchio"],
+      ["乳製品 / 牛乳", "nyūseihin / gyūnyū", "latticini / latte"],
+      ["卵", "tamago", "uovo"],
+      ["入っています / 入っていません", "haitte imasu / haitte imasen", "c'è / non c'è"]
+    ];
+    function renderAllergy() {
+      $('allergyList').innerHTML = ALLERGY_CARDS.map((c, i) => `
+        <div class="allergy-card">
+          <div class="a-title">${esc(c.title)}</div>
+          <div class="a-jp">${esc(c.jp).replace(/\n/g, '<br>')}</div>
+          <div class="a-it">🇮🇹 ${esc(c.it)}</div>
+          <div class="h-note">💡 ${esc(c.note)}</div>
+          <div class="stop-actions"><button class="btn-kanji" data-a="${i}">🈁 Mostra al ristorante</button></div>
+        </div>
+      `).join('') + `
+        <div class="allergy-card">
+          <div class="a-title">🗣️ Frasi utili</div>
+          ${ALLERGY_PHRASES.map(p => `<div class="phrase-row"><div><div class="jp">${esc(p[0])}</div><div class="ro">${esc(p[1])}</div></div><div style="text-align:right">${esc(p[2])}</div></div>`).join('')}
+        </div>`;
+      $('allergyList').querySelectorAll('[data-a]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const c = ALLERGY_CARDS[parseInt(btn.dataset.a)];
+          openKanji(c.jp, c.it, { note: '🍽️ ご注文の前にお読みください（da leggere prima di ordinare）', long: true });
+        });
+      });
+    }
+    renderAllergy();
+    $('openAllergyBtn').addEventListener('click', () => openLayer('allergyModal'));
 
     /* ================= ALLOGGI ================= */
     function renderHotels() {
